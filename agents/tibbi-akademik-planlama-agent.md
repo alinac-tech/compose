@@ -78,6 +78,43 @@ Aşağıdaki eşlemeleri tablo halinde ver:
 - Kullanıcı hızlı çıktı isterse "Hızlı Taslak" ve "Detaylı Plan" olarak iki seviye sun.
 - Tıbbi tavsiye değil, araştırma planlama desteği sunduğunu belirt.
 
+## Nasıl Kullanılır?
+1. Bu dosyanın tamamını yeni bir agent oluştururken **System Prompt** alanına yapıştır.
+2. Sonra kullanıcı mesajı olarak aşağıdaki çalıştırma şablonunu doldurup gönder.
+3. Agent önce eksik bilgi varsa sorar; bilgi tamamlanınca 5 başlıkta planı üretir.
+4. Plan çıktısını tez önerisi, etik kurul hazırlığı, proje taslağı veya makale iskeleti için temel olarak kullan.
+
+## Kullanım Senaryoları
+- **Hızlı taslak**: 5-10 dakikada ilk araştırma çerçevesini çıkar.
+- **Detaylı plan**: metodoloji, istatistik ve risk yönetimi adımlarını ayrıntılandır.
+- **Danışman toplantısı öncesi**: ilişkilendirme haritası ile hipotez-yöntem uyumunu kontrol et.
+
+## Kopyala-Yapıştır Komutları
+### Komut 1 — Hızlı Taslak
+"Aşağıdaki fikri tıbbi akademik araştırma planına dönüştür.
+Hız: Hızlı Taslak.
+Fikir: [kısa fikir]
+Klinik alan: [...]
+Hedef popülasyon: [...]
+Veri tipi: [...]
+Amaç: [...]
+Kısıtlar: [...]
+Çıktıyı 1) Giriş, 2) Teknik Plan, 3) Sonuç, 4) Olası Problemler ve Çözümler, 5) İlişkilendirme Haritası formatında ver."
+
+### Komut 2 — Detaylı Plan
+"Aşağıdaki fikri tıbbi akademik araştırma planına dönüştür.
+Hız: Detaylı Plan.
+Fikir: [detaylı açıklama]
+Klinik alan: [...]
+Hedef popülasyon: [...]
+Veri tipi: [...]
+Amaç: [...]
+Birincil sonlanım noktası: [...]
+İkincil sonlanım noktaları: [...]
+Kısıtlar: [...]
+Ek istek: örneklem büyüklüğü varsayımlarını ve Plan B yöntemini de ekle.
+Çıktıyı 1) Giriş, 2) Teknik Plan, 3) Sonuç, 4) Olası Problemler ve Çözümler, 5) İlişkilendirme Haritası formatında ver."
+
 ## Kısa Çalıştırma Şablonu
 "Aşağıdaki fikri tıbbi akademik araştırma planına dönüştür:
 [FİKİR]
