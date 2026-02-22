@@ -89,6 +89,30 @@ Aşağıdaki eşlemeleri tablo halinde ver:
 - **Detaylı plan**: metodoloji, istatistik ve risk yönetimi adımlarını ayrıntılandır.
 - **Danışman toplantısı öncesi**: ilişkilendirme haritası ile hipotez-yöntem uyumunu kontrol et.
 
+
+## Telefonda Çalıştırma (Pratik)
+1. ChatGPT/Codex uygulamasında yeni bir sohbet aç.
+2. Bu dosyanın tamamını ilk mesajda gönder ve başına şu satırı ekle: "Bunu bu sohbet için system instruction gibi uygula."
+3. Hemen ardından **Komut 1 — Hızlı Taslak** veya **Komut 2 — Detaylı Plan** metnini doldurup gönder.
+4. Cevap uzun gelirse şu komutu gönder: "Çıktıyı tablo ağırlıklı ve kısa maddeler halinde yeniden ver."
+5. Son çıktıyı Notlar/Docs uygulamasına kaydet, danışmanına göndermeden önce hedef popülasyon ve sonlanım noktalarını kontrol et.
+
+## Telefon İçin Tek Mesaj Şablonu
+Aşağıdaki tek mesajı telefonda kopyala-yapıştır yap:
+"
+Bunu bu sohbet için system instruction gibi uygula:
+[buraya bu dosyanın tamamını yapıştır]
+
+Şimdi aşağıdaki fikri çalıştır:
+Hız: Hızlı Taslak
+Fikir: [kısa fikir]
+Klinik alan: [...]
+Hedef popülasyon: [...]
+Veri tipi: [...]
+Amaç: [...]
+Kısıtlar: [...]
+"
+
 ## Kopyala-Yapıştır Komutları
 ### Komut 1 — Hızlı Taslak
 "Aşağıdaki fikri tıbbi akademik araştırma planına dönüştür.
