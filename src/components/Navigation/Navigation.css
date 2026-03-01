@@ -1,0 +1,104 @@
+/* ============================================================
+   NAVIGATION — RIBBON TABS
+   ============================================================ */
+
+.tab-navigation {
+  background: linear-gradient(180deg, #3d2b1a 0%, #2d1b0e 100%);
+  border-left: 1px solid var(--gold-dark);
+  border-right: 1px solid var(--gold-dark);
+  padding: 0 24px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--gold-dark);
+}
+
+.tab-list {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0;
+  flex: 1;
+}
+
+.tab-list::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--parchment-mid);
+  border: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  font-family: var(--font-header);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.2s;
+  opacity: 0.7;
+  overflow: visible;
+}
+
+.tab-item:hover {
+  color: var(--parchment-light);
+  opacity: 0.9;
+}
+
+.tab-item.active {
+  color: var(--brown-deep);
+  opacity: 1;
+  z-index: 2;
+}
+
+.tab-indicator {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--parchment-mid) 0%, var(--parchment-light) 100%);
+  border-radius: 6px 6px 0 0;
+  border: 1px solid var(--gold-dark);
+  border-bottom: none;
+  z-index: -1;
+}
+
+.tab-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.tab-label {
+  position: relative;
+  z-index: 1;
+}
+
+.tab-edge-left,
+.tab-edge-right {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(212,175,55,0.3));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-navigation {
+    padding: 0 8px;
+  }
+
+  .tab-item {
+    padding: 8px 10px;
+    font-size: 0;
+    gap: 0;
+  }
+
+  .tab-icon {
+    font-size: 1.1rem;
+  }
+}

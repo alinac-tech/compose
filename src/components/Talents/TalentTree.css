@@ -1,0 +1,266 @@
+/* ============================================================
+   TALENT TREE
+   ============================================================ */
+
+.talent-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.talent-header {
+  text-align: center;
+}
+
+.talent-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--brown-deep);
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.ornament-gold {
+  color: var(--gold-dark);
+  font-size: 0.9rem;
+}
+
+.talent-points-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+  border: 1px solid rgba(212,175,55,0.4);
+  border-radius: 20px;
+  padding: 8px 20px;
+  margin-bottom: 10px;
+}
+
+.points-icon { font-size: 1.1rem; }
+.points-count {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(212,175,55,0.4);
+}
+.points-label {
+  font-family: var(--font-header);
+  font-size: 0.78rem;
+  color: var(--brown-mid);
+  letter-spacing: 0.06em;
+}
+
+.talent-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--brown-mid);
+  font-style: italic;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Points notice */
+.points-notice {
+  background: rgba(212,175,55,0.12);
+  border: 1px solid rgba(212,175,55,0.4);
+  border-radius: 6px;
+  padding: 12px 20px;
+  text-align: center;
+  font-family: var(--font-header);
+  font-size: 0.88rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.04em;
+}
+
+/* Talent paths grid */
+.talent-paths {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* Card */
+.talent-card {
+  background: var(--parchment-mid);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.talent-card.has-ranks {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.talent-card.can-spend {
+  cursor: default;
+}
+
+.talent-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 2px solid;
+  background: rgba(255,255,255,0.3);
+}
+
+.talent-path-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.talent-path-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.talent-path-name {
+  font-family: var(--font-header);
+  font-size: 0.9rem;
+  color: var(--brown-deep);
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.talent-path-desc {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--brown-mid);
+  line-height: 1.4;
+}
+
+.talent-rank-display {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.rank-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.rank-max {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+/* Pips */
+.talent-pips {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+}
+
+.pip {
+  flex: 1;
+  height: 6px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+.pip.filled {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* Effect */
+.talent-effect {
+  padding: 0 16px 12px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  min-height: 30px;
+}
+
+.effect-active {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--brown-deep);
+}
+
+.effect-icon {
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.effect-inactive {
+  color: var(--brown-mid);
+  font-style: italic;
+  opacity: 0.6;
+}
+
+/* Spend button */
+.spend-btn {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  padding: 10px 16px;
+  font-family: var(--font-header);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  border-radius: 4px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+}
+
+.spend-btn.active:hover {
+  background: rgba(212,175,55,0.1);
+}
+
+.spend-btn.disabled {
+  color: var(--brown-mid) !important;
+  border-color: var(--parchment-dark) !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mastered badge */
+.mastered-badge {
+  text-align: center;
+  padding: 10px 16px 16px;
+  font-family: var(--font-header);
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 8px rgba(212,175,55,0.4);
+}
+
+/* Footer */
+.talent-footer {
+  margin-top: 8px;
+}
+
+.talent-lore {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0,0,0,0.03);
+  border: 1px dashed var(--parchment-dark);
+  border-radius: 6px;
+  padding: 14px 20px;
+}
+
+.lore-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+.talent-lore p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--brown-mid);
+  line-height: 1.6;
+}
+
+@media (max-width: 640px) {
+  .talent-paths {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,432 @@
+/* ============================================================
+   REWARDS PAGE
+   ============================================================ */
+
+.rewards-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rewards-header {
+  text-align: center;
+}
+
+.rewards-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--brown-deep);
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.rewards-desc {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--brown-mid);
+  font-style: italic;
+}
+
+.rewards-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tier-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tier-filter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1px solid var(--parchment-dark);
+  border-radius: 16px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--brown-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tier-filter:hover {
+  border-color: var(--brown-mid);
+  color: var(--brown-deep);
+}
+
+.tier-filter.active {
+  background: var(--brown-deep);
+  color: var(--parchment-light);
+  border-color: var(--brown-deep);
+}
+
+.tier-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.add-reward-btn {
+  background: linear-gradient(135deg, var(--brown-deep), var(--brown-mid));
+  color: var(--parchment-light);
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-family: var(--font-header);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.add-reward-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* Rewards grid */
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.empty-rewards {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--brown-mid);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.empty-rewards span { font-size: 2rem; opacity: 0.4; }
+
+/* Reward card */
+.reward-card {
+  background: var(--parchment-light);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.reward-card.unavailable {
+  opacity: 0.5;
+  filter: grayscale(40%);
+}
+
+.reward-card.cooldown {
+  opacity: 0.7;
+}
+
+.reward-tier-bar {
+  height: 3px;
+}
+
+.reward-body {
+  padding: 12px 14px;
+  flex: 1;
+}
+
+.reward-header-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.reward-tier-badge {
+  font-family: var(--font-header);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 10px;
+}
+
+.cooldown-badge {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--brown-mid);
+  background: rgba(0,0,0,0.06);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.unavailable-badge {
+  font-family: var(--font-header);
+  font-size: 0.65rem;
+  color: #95a5a6;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.reward-name {
+  font-family: var(--font-header);
+  font-size: 0.9rem;
+  color: var(--brown-deep);
+  margin-bottom: 4px;
+}
+
+.reward-desc {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--brown-mid);
+  line-height: 1.4;
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.reward-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reward-cooldown,
+.reward-seasonal,
+.reward-last {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--brown-mid);
+  opacity: 0.7;
+}
+
+.reward-actions {
+  display: flex;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 6px 10px;
+  gap: 4px;
+}
+
+.reward-action-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  color: var(--brown-mid);
+  transition: all 0.15s;
+}
+
+.reward-action-btn:hover { background: rgba(0,0,0,0.06); border-color: var(--parchment-dark); }
+.reward-action-btn.edit:hover { color: var(--gold-dark); }
+.reward-action-btn.delete:hover { color: var(--ink-red); }
+
+/* Tier info */
+.tier-info-grid {
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tier-info-title {
+  font-family: var(--font-header);
+  font-size: 0.85rem;
+  color: var(--brown-mid);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.tier-info-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tier-name {
+  font-family: var(--font-header);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  min-width: 80px;
+}
+
+.tier-chance {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--brown-mid);
+  min-width: 90px;
+}
+
+.tier-bar-bg {
+  flex: 1;
+  height: 5px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tier-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  max-width: 100%;
+}
+
+/* Modal styles (reuse from quest creation) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,15,6,0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.reward-modal {
+  background-color: var(--parchment-light);
+  border-radius: 6px;
+  border: 1px solid var(--gold-dark);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+  width: 480px;
+  max-width: 100%;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(139,69,19,0.15);
+}
+
+.modal-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--brown-deep);
+}
+
+.contract-close {
+  background: none;
+  border: none;
+  color: var(--brown-mid);
+  font-size: 1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.contract-close:hover { opacity: 1; color: var(--ink-red); }
+
+.modal-body {
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-family: var(--font-header);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brown-mid);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.modal-input {
+  width: 100%;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--parchment-dark);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--brown-deep);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.modal-input:focus {
+  border-color: var(--gold-dark);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--brown-mid);
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  accent-color: var(--gold-dark);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 14px 24px 20px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.contract-btn {
+  font-family: var(--font-header);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  padding: 9px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.15s;
+}
+
+.contract-btn.cancel {
+  background: transparent;
+  color: var(--brown-mid);
+  border-color: var(--parchment-dark);
+}
+.contract-btn.cancel:hover { background: rgba(0,0,0,0.05); }
+
+.contract-btn.sign {
+  background: linear-gradient(135deg, var(--brown-deep), var(--brown-mid));
+  color: var(--parchment-light);
+  border-color: var(--gold-dark);
+}
+.contract-btn.sign:hover:not(:disabled) { filter: brightness(1.1); }
+.contract-btn.sign:disabled { opacity: 0.5; cursor: not-allowed; }

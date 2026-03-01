@@ -1,0 +1,36 @@
+/* ============================================================
+   AMBIENT DUST PARTICLES
+   ============================================================ */
+
+.dust-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ambient-particle {
+  position: absolute;
+  background: rgba(212, 175, 55, 0.6);
+  border-radius: 50%;
+  bottom: -10px;
+  animation: ambientFloat linear infinite;
+}
+
+@keyframes ambientFloat {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: var(--opacity, 0.3);
+  }
+  95% {
+    opacity: var(--opacity, 0.3);
+  }
+  100% {
+    transform: translateY(-100vh) translateX(40px) rotate(360deg);
+    opacity: 0;
+  }
+}

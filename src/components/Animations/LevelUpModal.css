@@ -1,0 +1,165 @@
+/* ============================================================
+   LEVEL UP MODAL
+   ============================================================ */
+
+.levelup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 2, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.particle-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gold-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--gold-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255,215,0,0.8);
+  pointer-events: none;
+}
+
+.levelup-panel {
+  position: relative;
+  background: linear-gradient(135deg, #1a0f06 0%, #2d1b0e 50%, #1a0f06 100%);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 48px 56px;
+  text-align: center;
+  box-shadow: 0 0 80px rgba(212,175,55,0.4),
+              0 40px 80px rgba(0,0,0,0.9),
+              inset 0 1px 0 rgba(212,175,55,0.2);
+  max-width: 480px;
+  width: 90%;
+  cursor: default;
+  overflow: hidden;
+}
+
+.levelup-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.glow-ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid rgba(212,175,55,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.levelup-crown {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 20px rgba(212,175,55,0.8));
+}
+
+.levelup-text {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  color: var(--gold-bright);
+  text-shadow:
+    0 0 20px rgba(255,215,0,0.8),
+    0 0 40px rgba(255,215,0,0.4),
+    0 4px 8px rgba(0,0,0,0.8);
+  letter-spacing: 0.2em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.levelup-number {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  color: var(--gold);
+  text-shadow:
+    0 0 30px rgba(212,175,55,0.7),
+    0 4px 12px rgba(0,0,0,0.8);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.levelup-divider {
+  font-size: 0.85rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.4em;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.stat-gains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.stat-gain {
+  font-family: var(--font-header);
+  font-size: 0.8rem;
+  color: var(--parchment-light);
+  background: rgba(212,175,55,0.15);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 12px;
+  padding: 4px 12px;
+  letter-spacing: 0.04em;
+}
+
+.stat-gain.talent {
+  background: rgba(155,89,182,0.2);
+  border-color: rgba(155,89,182,0.4);
+  color: #d7bde2;
+}
+
+.levelup-flavour {
+  font-family: var(--font-script);
+  font-size: 1.2rem;
+  color: var(--parchment-mid);
+  line-height: 1.6;
+  opacity: 0.8;
+  margin-bottom: 24px;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.levelup-continue {
+  background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.1));
+  border: 1px solid var(--gold-dark);
+  color: var(--gold);
+  font-family: var(--font-header);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  padding: 12px 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-shadow: 0 0 8px rgba(212,175,55,0.4);
+}
+
+.levelup-continue:hover {
+  background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.15));
+  box-shadow: 0 0 16px rgba(212,175,55,0.3);
+}
