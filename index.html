@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Varyant Tahmin Oyunu</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 20px 0;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .scoreboard span {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-area {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .pokemon-display {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pokemon-display img {
+            width: 220px;
+            height: 220px;
+            image-rendering: pixelated;
+            transition: filter 0.5s ease;
+        }
+
+        .pokemon-display img.silhouette {
+            filter: brightness(0) saturate(0);
+        }
+
+        .pokemon-display img.partial {
+            filter: brightness(0.3) saturate(0.2) blur(2px);
+        }
+
+        .pokemon-display img.revealed {
+            filter: none;
+            animation: popIn 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hint-area {
+            margin: 15px 0;
+            min-height: 60px;
+        }
+
+        .hint {
+            background: rgba(255,255,255,0.08);
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 12px;
+            margin: 4px;
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 2px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            padding: 14px 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: capitalize;
+        }
+
+        .option-btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: rgba(72, 219, 251, 0.3);
+            border-color: #48dbfb;
+            animation: pulse 0.5s ease;
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .ctrl-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .ctrl-btn:hover { transform: translateY(-2px); }
+
+        .btn-hint {
+            background: linear-gradient(135deg, #feca57, #f39c12);
+            color: #1a1a2e;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+            color: #1a1a2e;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 16px 40px;
+        }
+
+        .difficulty-select {
+            margin: 20px 0;
+        }
+
+        .difficulty-select label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .diff-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .diff-btn {
+            padding: 10px 24px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: transparent;
+            color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .diff-btn:hover, .diff-btn.active {
+            background: rgba(255,255,255,0.15);
+            border-color: #48dbfb;
+        }
+
+        .message {
+            font-size: 1.3rem;
+            margin: 10px 0;
+            font-weight: bold;
+            min-height: 35px;
+        }
+
+        .message.correct-msg { color: #48dbfb; }
+        .message.wrong-msg { color: #ff6b6b; }
+
+        .round-info {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 10px;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+            background: linear-gradient(90deg, #48dbfb, #0abde3);
+        }
+
+        .timer-fill.warning { background: linear-gradient(90deg, #feca57, #f39c12); }
+        .timer-fill.danger { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+
+        .game-over {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .game-over h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .streak-display {
+            color: #feca57;
+            font-size: 0.95rem;
+        }
+
+        /* Type colors */
+        .type-normal { background: #a8a878; }
+        .type-fire { background: #f08030; }
+        .type-water { background: #6890f0; }
+        .type-electric { background: #f8d030; color: #333; }
+        .type-grass { background: #78c850; }
+        .type-ice { background: #98d8d8; color: #333; }
+        .type-fighting { background: #c03028; }
+        .type-poison { background: #a040a0; }
+        .type-ground { background: #e0c068; color: #333; }
+        .type-flying { background: #a890f0; }
+        .type-psychic { background: #f85888; }
+        .type-bug { background: #a8b820; }
+        .type-rock { background: #b8a038; }
+        .type-ghost { background: #705898; }
+        .type-dragon { background: #7038f8; }
+        .type-dark { background: #705848; }
+        .type-steel { background: #b8b8d0; color: #333; }
+        .type-fairy { background: #ee99ac; color: #333; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            .options-grid { grid-template-columns: 1fr; }
+            .pokemon-display { width: 180px; height: 180px; }
+            .pokemon-display img { width: 160px; height: 160px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pokemon Varyant Tahmin Oyunu</h1>
+        <div id="app"></div>
+    </div>
+
+    <script>
+        const app = document.getElementById('app');
+        const TOTAL_ROUNDS = 10;
+        const TIMER_DURATION = { easy: 20, medium: 15, hard: 10 };
+
+        let state = {
+            score: 0,
+            round: 0,
+            streak: 0,
+            bestStreak: 0,
+            difficulty: 'medium',
+            hintsUsed: 0,
+            timerInterval: null,
+            timeLeft: 0,
+            answered: false,
+            currentPokemon: null,
+            options: [],
+            hints: [],
+            usedPokemonIds: new Set()
+        };
+
+        // Pokemon with interesting regional/mega/other variants
+        const POKEMON_POOL = [
+            // Gen 1
+            { id: 1, name: 'bulbasaur' }, { id: 4, name: 'charmander' }, { id: 7, name: 'squirtle' },
+            { id: 25, name: 'pikachu' }, { id: 6, name: 'charizard' }, { id: 9, name: 'blastoise' },
+            { id: 3, name: 'venusaur' }, { id: 39, name: 'jigglypuff' }, { id: 52, name: 'meowth' },
+            { id: 54, name: 'psyduck' }, { id: 58, name: 'growlithe' }, { id: 77, name: 'ponyta' },
+            { id: 94, name: 'gengar' }, { id: 129, name: 'magikarp' }, { id: 130, name: 'gyarados' },
+            { id: 131, name: 'lapras' }, { id: 133, name: 'eevee' }, { id: 143, name: 'snorlax' },
+            { id: 150, name: 'mewtwo' }, { id: 151, name: 'mew' },
+            // Gen 2
+            { id: 152, name: 'chikorita' }, { id: 155, name: 'cyndaquil' }, { id: 158, name: 'totodile' },
+            { id: 175, name: 'togepi' }, { id: 196, name: 'espeon' }, { id: 197, name: 'umbreon' },
+            { id: 248, name: 'tyranitar' }, { id: 249, name: 'lugia' }, { id: 250, name: 'ho-oh' },
+            // Gen 3
+            { id: 252, name: 'treecko' }, { id: 255, name: 'torchic' }, { id: 258, name: 'mudkip' },
+            { id: 282, name: 'gardevoir' }, { id: 373, name: 'salamence' }, { id: 376, name: 'metagross' },
+            { id: 384, name: 'rayquaza' }, { id: 445, name: 'garchomp' },
+            // Gen 4
+            { id: 387, name: 'turtwig' }, { id: 390, name: 'chimchar' }, { id: 393, name: 'piplup' },
+            { id: 448, name: 'lucario' }, { id: 471, name: 'glaceon' }, { id: 470, name: 'leafeon' },
+            // Gen 5
+            { id: 495, name: 'snivy' }, { id: 498, name: 'tepig' }, { id: 501, name: 'oshawott' },
+            { id: 571, name: 'zoroark' }, { id: 609, name: 'chandelure' },
+            // Gen 6+
+            { id: 650, name: 'chespin' }, { id: 653, name: 'fennekin' }, { id: 656, name: 'froakie' },
+            { id: 700, name: 'sylveon' }, { id: 722, name: 'rowlet' }, { id: 725, name: 'litten' },
+            { id: 728, name: 'popplio' }, { id: 778, name: 'mimikyu' },
+        ];
+
+        const TYPE_NAMES_TR = {
+            normal: 'Normal', fire: 'Ates', water: 'Su', electric: 'Elektrik',
+            grass: 'Bitki', ice: 'Buz', fighting: 'Dovus', poison: 'Zehir',
+            ground: 'Toprak', flying: 'Ucus', psychic: 'Psisik', bug: 'Bocek',
+            rock: 'Kaya', ghost: 'Hayalet', dragon: 'Ejderha', dark: 'Karanlik',
+            steel: 'Celik', fairy: 'Peri'
+        };
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function renderMenu() {
+            app.innerHTML = `
+                <div class="game-area">
+                    <p style="font-size:1.1rem; margin-bottom:20px; color:rgba(255,255,255,0.8);">
+                        Pokemon'un silüetine, ipuclarina ve tiplerine bakarak hangi Pokemon oldugunu tahmin et!
+                    </p>
+                    <div class="difficulty-select">
+                        <label>Zorluk Seviyesi:</label>
+                        <div class="diff-buttons">
+                            <button class="diff-btn ${state.difficulty === 'easy' ? 'active' : ''}" onclick="setDifficulty('easy')">Kolay</button>
+                            <button class="diff-btn ${state.difficulty === 'medium' ? 'active' : ''}" onclick="setDifficulty('medium')">Orta</button>
+                            <button class="diff-btn ${state.difficulty === 'hard' ? 'active' : ''}" onclick="setDifficulty('hard')">Zor</button>
+                        </div>
+                    </div>
+                    <br>
+                    <button class="ctrl-btn btn-start" onclick="startGame()">Oyunu Baslat!</button>
+                </div>
+            `;
+        }
+
+        window.setDifficulty = function(d) {
+            state.difficulty = d;
+            renderMenu();
+        };
+
+        window.startGame = async function() {
+            state.score = 0;
+            state.round = 0;
+            state.streak = 0;
+            state.bestStreak = 0;
+            state.hintsUsed = 0;
+            state.usedPokemonIds = new Set();
+            await nextRound();
+        };
+
+        async function nextRound() {
+            state.round++;
+            state.answered = false;
+            state.hints = [];
+
+            if (state.round > TOTAL_ROUNDS) {
+                renderGameOver();
+                return;
+            }
+
+            app.innerHTML = `
+                <div class="scoreboard">
+                    <span>Skor: ${state.score}</span>
+                    <span>Tur: ${state.round}/${TOTAL_ROUNDS}</span>
+                    <span class="streak-display">Seri: ${state.streak}</span>
+                </div>
+                <div class="game-area">
+                    <p style="color:rgba(255,255,255,0.5);">Pokemon yukleniyor...</p>
+                </div>
+            `;
+
+            try {
+                // Pick a random pokemon not yet used
+                let available = POKEMON_POOL.filter(p => !state.usedPokemonIds.has(p.id));
+                if (available.length < 4) {
+                    state.usedPokemonIds.clear();
+                    available = POKEMON_POOL;
+                }
+
+                const shuffled = shuffle(available);
+                const correct = shuffled[0];
+                state.usedPokemonIds.add(correct.id);
+
+                // Get wrong options from remaining
+                const wrongPool = POKEMON_POOL.filter(p => p.id !== correct.id);
+                const wrongOptions = shuffle(wrongPool).slice(0, 3);
+
+                const options = shuffle([correct, ...wrongOptions]);
+
+                // Fetch pokemon data
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${correct.id}`);
+                const data = await response.json();
+
+                const speciesRes = await fetch(data.species.url);
+                const speciesData = await speciesRes.json();
+
+                state.currentPokemon = {
+                    id: correct.id,
+                    name: correct.name,
+                    data: data,
+                    species: speciesData
+                };
+                state.options = options;
+
+                renderRound();
+            } catch (err) {
+                app.innerHTML = `
+                    <div class="game-area">
+                        <p>Hata olustu: ${err.message}</p>
+                        <button class="ctrl-btn btn-next" onclick="nextRound()">Tekrar Dene</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderRound() {
+            const pokemon = state.currentPokemon;
+            const imgUrl = pokemon.data.sprites.other['official-artwork'].front_default
+                || pokemon.data.sprites.front_default;
+
+            const imgClass = state.answered ? 'revealed' : (state.difficulty === 'easy' ? 'partial' : 'silhouette');
+            const timerMax = TIMER_DURATION[state.difficulty];
+
+            app.innerHTML = `
+                <div class="scoreboard">
+                    <span>Skor: ${state.score}</span>
+                    <span>Tur: ${state.round}/${TOTAL_ROUNDS}</span>
+                    <span class="streak-display">Seri: ${state.streak}</span>
+                </div>
+                <div class="game-area">
+                    <div class="round-info">Bu Pokemon'u taniyabilir misin?</div>
+                    <div class="timer-bar">
+                        <div class="timer-fill" id="timerFill" style="width:100%"></div>
+                    </div>
+                    <div class="pokemon-display">
+                        <img src="${imgUrl}" class="${imgClass}" id="pokemonImg" alt="Pokemon">
+                    </div>
+                    <div class="hint-area" id="hintArea">
+                        ${state.hints.map(h => `<span class="hint">${h}</span>`).join('')}
+                    </div>
+                    <div class="message" id="message"></div>
+                    <div class="options-grid" id="optionsGrid">
+                        ${state.options.map(o => `
+                            <button class="option-btn" onclick="guess('${o.name}')" ${state.answered ? 'disabled' : ''}>
+                                ${o.name}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="controls">
+                        ${!state.answered ? `<button class="ctrl-btn btn-hint" onclick="getHint()">Ipucu (${3 - state.hints.length} kaldi)</button>` : ''}
+                        ${state.answered ? `<button class="ctrl-btn btn-next" onclick="nextRound()">Sonraki &rarr;</button>` : ''}
+                    </div>
+                </div>
+            `;
+
+            if (!state.answered) {
+                startTimer(timerMax);
+            }
+        }
+
+        function startTimer(seconds) {
+            clearInterval(state.timerInterval);
+            state.timeLeft = seconds * 10; // Use 10ths of second for smooth bar
+            const max = state.timeLeft;
+
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                const pct = (state.timeLeft / max) * 100;
+                const fill = document.getElementById('timerFill');
+                if (!fill) { clearInterval(state.timerInterval); return; }
+
+                fill.style.width = pct + '%';
+                if (pct < 25) fill.className = 'timer-fill danger';
+                else if (pct < 50) fill.className = 'timer-fill warning';
+
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    if (!state.answered) timeUp();
+                }
+            }, 100);
+        }
+
+        function timeUp() {
+            state.answered = true;
+            state.streak = 0;
+            const msg = document.getElementById('message');
+            if (msg) {
+                msg.className = 'message wrong-msg';
+                msg.textContent = `Sure doldu! Cevap: ${state.currentPokemon.name}`;
+            }
+            revealPokemon(null, false);
+        }
+
+        window.guess = function(name) {
+            if (state.answered) return;
+            state.answered = true;
+            clearInterval(state.timerInterval);
+
+            const isCorrect = name === state.currentPokemon.name;
+            const msg = document.getElementById('message');
+            const buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent.trim() === state.currentPokemon.name) {
+                    btn.classList.add('correct');
+                } else if (btn.textContent.trim() === name && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (isCorrect) {
+                const timeBonus = Math.floor(state.timeLeft / 10);
+                const hintPenalty = state.hints.length * 5;
+                const diffMultiplier = { easy: 1, medium: 1.5, hard: 2 }[state.difficulty];
+                const streakBonus = Math.min(state.streak * 3, 15);
+                const points = Math.max(5, Math.floor((10 + timeBonus + streakBonus - hintPenalty) * diffMultiplier));
+
+                state.score += points;
+                state.streak++;
+                if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+                msg.className = 'message correct-msg';
+                msg.textContent = `Dogru! +${points} puan ${state.streak > 1 ? `(${state.streak}x seri!)` : ''}`;
+            } else {
+                state.streak = 0;
+                msg.className = 'message wrong-msg';
+                msg.textContent = `Yanlis! Dogru cevap: ${state.currentPokemon.name}`;
+            }
+
+            revealPokemon(name, isCorrect);
+        };
+
+        function revealPokemon(guess, correct) {
+            const img = document.getElementById('pokemonImg');
+            if (img) {
+                img.className = 'revealed';
+            }
+
+            // Show types
+            const hintArea = document.getElementById('hintArea');
+            const types = state.currentPokemon.data.types.map(t => t.type.name);
+            const typeHtml = types.map(t =>
+                `<span class="type-badge type-${t}">${TYPE_NAMES_TR[t] || t}</span>`
+            ).join(' ');
+
+            if (hintArea) {
+                hintArea.innerHTML += `<div style="margin-top:10px">${typeHtml}</div>`;
+            }
+
+            // Re-render controls
+            const controls = document.querySelector('.controls');
+            if (controls) {
+                controls.innerHTML = `<button class="ctrl-btn btn-next" onclick="nextRound()">Sonraki &rarr;</button>`;
+            }
+        }
+
+        window.getHint = function() {
+            if (state.hints.length >= 3 || state.answered) return;
+
+            const pokemon = state.currentPokemon;
+            const data = pokemon.data;
+            const species = pokemon.species;
+
+            const allHints = [];
+
+            // Type hints
+            const types = data.types.map(t => TYPE_NAMES_TR[t.type.name] || t.type.name);
+            allHints.push(`Tip: ${types.join(', ')}`);
+
+            // Stat hint
+            const stats = data.stats;
+            const highest = stats.reduce((a, b) => a.base_stat > b.base_stat ? a : b);
+            const statNames = {
+                hp: 'HP', attack: 'Saldiri', defense: 'Savunma',
+                'special-attack': 'Ozel Saldiri', 'special-defense': 'Ozel Savunma', speed: 'Hiz'
+            };
+            allHints.push(`En yuksek stat: ${statNames[highest.stat.name] || highest.stat.name} (${highest.base_stat})`);
+
+            // Weight/height
+            allHints.push(`Boy: ${data.height / 10}m | Kilo: ${data.weight / 10}kg`);
+
+            // Generation
+            const genMatch = species.generation?.name?.match(/generation-(.+)/);
+            if (genMatch) {
+                const genNum = genMatch[1].toUpperCase();
+                allHints.push(`Nesil: ${genNum}`);
+            }
+
+            // Ability hint
+            if (data.abilities.length > 0) {
+                const ability = data.abilities[0].ability.name.replace('-', ' ');
+                allHints.push(`Yetenek: ${ability}`);
+            }
+
+            // Pick next unused hint
+            const unusedHints = allHints.filter(h => !state.hints.includes(h));
+            if (unusedHints.length > 0) {
+                state.hints.push(unusedHints[0]);
+            }
+
+            // If difficulty is hard and we're showing silhouette, make it partial after first hint
+            if (state.difficulty === 'hard' && state.hints.length >= 2) {
+                const img = document.getElementById('pokemonImg');
+                if (img && img.classList.contains('silhouette')) {
+                    img.className = 'partial';
+                }
+            }
+
+            renderRound();
+        };
+
+        function renderGameOver() {
+            clearInterval(state.timerInterval);
+            const maxPossible = TOTAL_ROUNDS * 50;
+            const pct = Math.round((state.score / maxPossible) * 100);
+
+            let message = '';
+            if (pct >= 80) message = 'Pokemon Ustasi!';
+            else if (pct >= 60) message = 'Harika oyun!';
+            else if (pct >= 40) message = 'Iyi deneme!';
+            else message = 'Daha fazla pratik yap!';
+
+            app.innerHTML = `
+                <div class="game-area game-over">
+                    <h2>Oyun Bitti!</h2>
+                    <div class="final-score">${state.score}</div>
+                    <p style="font-size:1.2rem; margin:10px 0;">${message}</p>
+                    <div style="margin:15px 0; color:rgba(255,255,255,0.7);">
+                        <p>En iyi seri: ${state.bestStreak}</p>
+                        <p>Kullanilan ipucu: ${state.hintsUsed + state.hints.length}</p>
+                        <p>Zorluk: ${{ easy: 'Kolay', medium: 'Orta', hard: 'Zor' }[state.difficulty]}</p>
+                    </div>
+                    <div class="controls">
+                        <button class="ctrl-btn btn-start" onclick="startGame()">Tekrar Oyna</button>
+                        <button class="ctrl-btn btn-next" onclick="renderMenu()">Ana Menu</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.renderMenu = renderMenu;
+
+        // Start
+        renderMenu();
+    </script>
+</body>
+</html>
