@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Dashboard — Ozdemir MD</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+--bg: #000000;
+--surface: rgba(255,255,255,0.05);
+--surface-2: rgba(255,255,255,0.08);
+--surface-3: rgba(255,255,255,0.12);
+--border: rgba(255,255,255,0.06);
+--border-hover: rgba(255,255,255,0.14);
+--text: #f5f5f7;
+--text-2: #a1a1a6;
+--text-3: #6e6e73;
+--accent: #0a84ff;
+--accent-dim: rgba(10,132,255,0.12);
+--red: #ff453a;
+--red-dim: rgba(255,69,58,0.12);
+--orange: #ff9f0a;
+--orange-dim: rgba(255,159,10,0.12);
+--green: #30d158;
+--green-dim: rgba(48,209,88,0.12);
+--purple: #bf5af2;
+--purple-dim: rgba(191,90,242,0.10);
+--yellow: #ffd60a;
+--yellow-dim: rgba(255,214,10,0.12);
+--radius: 16px;
+--radius-sm: 10px;
+}
+
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+background: var(--bg);
+color: var(--text);
+line-height: 1.5;
+min-height: 100vh;
+-webkit-font-smoothing: antialiased;
+overflow-x: hidden;
+-webkit-tap-highlight-color: transparent;
+}
+
+.splash {
+position: fixed; inset: 0; z-index: 1000; background: #000;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+animation: splashOut 0.6s ease-in 2.2s forwards;
+}
+.splash-icon {
+width: 60px; height: 60px; border-radius: 16px;
+background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 50%, #bf5af2 100%);
+display: flex; align-items: center; justify-content: center;
+font-size: 28px; font-weight: 700; color: #fff;
+opacity: 0; transform: scale(0.5);
+animation: iconIn 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s forwards;
+}
+.splash-text { margin-top: 20px; font-size: 22px; font-weight: 600; letter-spacing: -0.3px; opacity: 0; transform: translateY(10px); animation: fadeUp 0.5s ease 0.6s forwards; }
+.splash-sub { margin-top: 6px; font-size: 13px; color: var(--text-2); opacity: 0; animation: fadeIn 0.4s ease 1.0s forwards; }
+.splash-bar { margin-top: 24px; width: 120px; height: 2px; background: var(--surface-3); border-radius: 1px; overflow: hidden; opacity: 0; animation: fadeIn 0.3s ease 1.2s forwards; }
+.splash-bar-fill { width: 0; height: 100%; background: linear-gradient(90deg, var(--accent), var(--purple)); border-radius: 1px; animation: barFill 0.8s ease 1.3s forwards; }
+
+@keyframes iconIn { to { opacity: 1; transform: scale(1); } }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes barFill { to { width: 100%; } }
+@keyframes splashOut { to { opacity: 0; pointer-events: none; } }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+.reveal {
+opacity: 0; transform: translateY(20px);
+animation: revealIn 0.6s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+will-change: transform, opacity;
+-webkit-backface-visibility: hidden;
+backface-visibility: hidden;
+}
+.reveal.d1 { animation-delay: 2.4s; }
+.reveal.d2 { animation-delay: 2.55s; }
+.reveal.d3 { animation-delay: 2.7s; }
+.reveal.d4 { animation-delay: 2.85s; }
+.reveal.d5 { animation-delay: 3.0s; }
+@keyframes revealIn { to { opacity: 1; transform: translateY(0); } }
+
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.header-left h1 {
+font-size: 32px; font-weight: 700; letter-spacing: -0.8px;
+background: linear-gradient(135deg, #f5f5f7 0%, #a1a1a6 100%);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-left p { font-size: 13px; color: var(--text-3); margin-top: 4px; }
+.header-right { display: flex; gap: 8px; }
+.stat-pill {
+display: flex; align-items: center; gap: 7px; padding: 7px 16px;
+background: var(--surface); backdrop-filter: blur(20px);
+border: 1px solid var(--border); border-radius: 100px;
+font-size: 12px; font-weight: 500; cursor: default;
+transition: all 0.3s;
+}
+.stat-pill:hover { border-color: var(--border-hover); background: var(--surface-2); transform: translateY(-1px); }
+.stat-pill .pill-dot { width: 6px; height: 6px; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+.daily-quote { text-align: center; padding: 12px 0 20px; margin-bottom: 4px; }
+.daily-quote .q-text { font-size: 13px; color: var(--text-2); font-style: italic; font-weight: 300; letter-spacing: 0.3px; }
+.daily-quote .q-author { font-size: 11px; color: var(--text-3); font-style: normal; margin-top: 4px; }
+
+.apple-cal {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius);
+overflow: hidden;
+margin-bottom: 16px;
+transform: translateZ(0);
+}
+.apple-cal-head {
+display: flex; justify-content: space-between; align-items: center;
+padding: 14px 20px; border-bottom: 1px solid var(--border);
+}
+.apple-cal-title { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+.apple-cal-week { font-size: 12px; color: var(--text-2); font-weight: 500; }
+.apple-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.apple-col {
+border-right: 1px solid var(--border); min-height: 180px;
+cursor: pointer; transition: background 0.2s;
+}
+.apple-col:last-child { border-right: none; }
+.apple-col:hover { background: var(--surface-2); }
+.apple-col.active { background: rgba(10,132,255,0.06); box-shadow: inset 0 -3px 0 var(--accent); }
+.apple-col-head { text-align: center; padding: 10px 4px 8px; border-bottom: 1px solid var(--border); }
+.apple-col-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-3); margin-bottom: 2px; }
+.apple-col-num { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; display: inline-block; }
+.apple-col-num.is-today {
+background: var(--accent); color: #fff;
+width: 30px; height: 30px; line-height: 30px; border-radius: 50%; text-align: center;
+}
+.apple-col-body { padding: 5px 4px; }
+.apple-ev {
+padding: 3px 5px; margin-bottom: 3px; border-radius: 4px;
+border-left: 3px solid var(--ev-color, var(--accent));
+background: var(--ev-bg, var(--accent-dim));
+transition: transform 0.15s;
+}
+.apple-ev:hover { transform: scale(1.03); }
+.apple-ev-title { font-weight: 600; color: var(--text); font-size: 10px; line-height: 1.3; }
+.apple-ev-time { font-size: 9px; color: var(--text-3); font-weight: 500; }
+.apple-ev-detail { font-size: 9px; color: var(--text-2); }
+
+.day-preview {
+position: fixed; z-index: 200;
+background: rgba(28,28,30,0.92);
+backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 16px; padding: 20px;
+min-width: 280px; max-width: 320px;
+pointer-events: none; opacity: 0;
+transform: scale(0.88) translateY(6px);
+transition: opacity 0.18s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.05);
+}
+.day-preview.show { opacity: 1; transform: scale(1) translateY(0); }
+.day-preview-inner { display: flex; gap: 16px; }
+.day-preview-left { flex-shrink: 0; }
+.day-preview-num { font-size: 48px; font-weight: 800; letter-spacing: -3px; line-height: 1; color: var(--text); }
+.day-preview-dayname { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-3); font-weight: 700; margin-top: 2px; }
+.day-preview-right { flex: 1; min-width: 0; }
+.day-preview-items { list-style: none; }
+.day-preview-items li {
+font-size: 12px; color: var(--text-2); padding: 4px 0;
+border-bottom: 1px solid rgba(255,255,255,0.04);
+display: flex; align-items: center; gap: 8px;
+}
+.day-preview-items li:last-child { border-bottom: none; }
+.dpi-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dpi-text { font-weight: 500; }
+
+.apple-day-view {
+display: none; margin-bottom: 16px;
+background: var(--surface); border: 1px solid var(--border);
+border-radius: var(--radius); overflow: hidden;
+}
+.apple-day-view.show { display: block; animation: revealIn 0.3s ease forwards; }
+.adv-header {
+display: flex; justify-content: space-between; align-items: center;
+padding: 16px 20px; border-bottom: 1px solid var(--border);
+}
+.adv-title { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+.adv-close {
+background: var(--surface-2); border: 1px solid var(--border); color: var(--text-3);
+width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 13px;
+display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.adv-close:hover { background: var(--surface-3); color: var(--text); }
+.adv-body { padding: 16px 20px; }
+.adv-event { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.adv-event:last-child { border-bottom: none; }
+.adv-time { font-size: 12px; font-weight: 600; color: var(--text-3); min-width: 50px; padding-top: 3px; font-variant-numeric: tabular-nums; }
+.adv-card {
+flex: 1; padding: 10px 14px; border-radius: 8px;
+border-left: 3px solid var(--ev-color, var(--accent));
+background: var(--ev-bg, var(--accent-dim));
+}
+.adv-card-title { font-size: 13px; font-weight: 600; }
+.adv-card-detail { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.adv-card-meta { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.card {
+background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+border: 1px solid var(--border); border-radius: var(--radius); padding: 22px;
+transition: all 0.3s; transform: translateZ(0);
+}
+.card:hover { border-color: var(--border-hover); box-shadow: 0 8px 40px rgba(0,0,0,0.2); }
+.card-title {
+font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+color: var(--text-3); margin-bottom: 16px;
+display: flex; justify-content: space-between; align-items: center;
+}
+.card-title .badge { font-size: 10px; padding: 3px 10px; border-radius: 100px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+
+.tab-bar {
+display: flex; gap: 4px; margin-bottom: 16px;
+background: var(--surface); border-radius: 12px; padding: 4px;
+border: 1px solid var(--border);
+}
+.tab-btn {
+flex: 1; padding: 10px 16px; border: none; border-radius: 10px;
+background: transparent; color: var(--text-3); font-family: inherit;
+font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.25s ease;
+}
+.tab-btn:hover { color: var(--text-2); background: var(--surface-2); }
+.tab-btn.active { background: var(--surface-3); color: var(--text); font-weight: 600; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.task-list { list-style: none; }
+.task-item {
+display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+margin: 0 -14px; border-radius: var(--radius-sm); cursor: pointer;
+transition: all 0.25s; border-bottom: 1px solid var(--border);
+}
+.task-item:last-child { border-bottom: none; }
+.task-item:hover { background: var(--surface-2); transform: translateX(4px); }
+.task-item:active { transform: scale(0.99); }
+.task-item.completed { opacity: 0.35; transform: translateX(0); }
+.task-item.completed .task-text { text-decoration: line-through; }
+.task-check {
+width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--text-3);
+flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.task-check.p1 { border-color: var(--red); }
+.task-check.p2 { border-color: var(--orange); }
+.task-check.p3 { border-color: var(--accent); }
+.task-check.p4 { border-color: var(--text-3); }
+.task-item.completed .task-check { background: var(--green); border-color: var(--green); transform: scale(1.1); }
+.task-item.completed .task-check::after { content: '\2713'; font-size: 11px; color: #000; font-weight: 700; }
+.task-body { flex: 1; min-width: 0; }
+.task-text { font-size: 13.5px; font-weight: 500; transition: all 0.2s; }
+.task-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.task-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; flex-shrink: 0; }
+.tag-wait { background: var(--orange-dim); color: var(--orange); }
+.tag-active { background: var(--accent-dim); color: var(--accent); }
+.tag-ready { background: var(--green-dim); color: var(--green); }
+
+.task-item.fire-complete { animation: fireGlow 1.2s ease-out; }
+@keyframes fireGlow {
+0% { box-shadow: none; }
+10% { box-shadow: 0 0 8px rgba(255,159,10,0.4), 0 0 16px rgba(255,69,58,0.2); }
+30% { box-shadow: 0 0 20px rgba(255,159,10,0.6), 0 0 40px rgba(255,69,58,0.3), 0 0 60px rgba(255,214,10,0.1); }
+50% { box-shadow: 0 0 30px rgba(255,214,10,0.5), 0 0 50px rgba(255,159,10,0.2); }
+100% { box-shadow: none; }
+}
+.fire-particle {
+position: fixed; border-radius: 50%; pointer-events: none; z-index: 999;
+animation: fireRise 0.9s ease-out forwards;
+}
+@keyframes fireRise {
+0% { opacity: 1; transform: translateY(0) scale(1); }
+60% { opacity: 0.8; }
+100% { opacity: 0; transform: translateY(-80px) translateX(var(--fx,0px)) scale(0.2); }
+}
+
+.research-item { padding: 14px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.25s; }
+.research-item:last-child { border-bottom: none; }
+.research-item:hover { opacity: 0.85; }
+.ri-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.ri-code { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; }
+.ri-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.2px; }
+.ri-desc { font-size: 12px; color: var(--text-2); line-height: 1.55; transition: all 0.3s; overflow: hidden; }
+.ri-desc.hidden { max-height: 0; opacity: 0; margin: 0; padding: 0; }
+.ri-progress { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.progress-bar { flex: 1; height: 3px; background: var(--surface-3); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; width: 0; transition: width 1s cubic-bezier(0.25,0.46,0.45,0.94); }
+.progress-pct { font-size: 11px; font-weight: 600; color: var(--text-3); min-width: 30px; text-align: right; }
+
+.sb-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; transition: all 0.2s; }
+.sb-row:last-child { border-bottom: none; }
+.sb-row:hover { padding-left: 4px; }
+.sb-label { color: var(--text-2); }
+.sb-value { font-weight: 600; }
+.sys-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; transition: all 0.2s; }
+.sys-item:last-child { border-bottom: none; }
+.sys-item:hover { padding-left: 4px; }
+.sys-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; display: inline-block; }
+.sys-dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s ease-in-out infinite; }
+.sys-dot.off { background: var(--text-3); }
+.done-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.done-item:last-child { border-bottom: none; }
+.done-item:hover { opacity: 0.7; padding-left: 4px; }
+.done-check { color: var(--green); font-size: 14px; flex-shrink: 0; }
+.done-label { flex: 1; }
+.done-detail { font-size: 11px; color: var(--text-3); }
+.idea-card { padding: 14px 16px; background: var(--purple-dim); border: 1px solid rgba(191,90,242,0.15); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.3s; margin-top: 10px; }
+.idea-card:hover { border-color: rgba(191,90,242,0.35); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(191,90,242,0.08); }
+.idea-title { font-size: 13px; font-weight: 600; color: var(--purple); margin-bottom: 3px; }
+.idea-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; transition: all 0.3s; overflow: hidden; }
+.idea-desc.hidden { max-height: 0; opacity: 0; padding: 0; }
+
+.supp-list { display: flex; flex-direction: column; gap: 12px; }
+.supp-item { display: flex; align-items: center; gap: 12px; }
+.supp-name { font-size: 13px; font-weight: 500; min-width: 90px; }
+.supp-dose { font-size: 13px; font-weight: 700; min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
+.supp-bar { flex: 1; height: 4px; background: var(--surface-3); border-radius: 2px; overflow: hidden; }
+.supp-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+.footer { text-align: center; font-size: 11px; color: var(--text-3); padding-top: 24px; margin-top: 8px; }
+
+@media (max-width: 768px) {
+.container { padding: 16px 12px; }
+.grid, .grid-3 { grid-template-columns: 1fr; }
+.header { flex-direction: column; align-items: flex-start; gap: 12px; }
+.header-right { flex-wrap: wrap; }
+.header-left h1 { font-size: 24px; }
+.tab-bar { flex-wrap: wrap; }
+.tab-btn { padding: 8px 12px; font-size: 12px; }
+.apple-cal-grid { grid-template-columns: repeat(7, minmax(90px, 1fr)); overflow-x: auto; }
+.apple-col { min-height: 140px; }
+.apple-ev { font-size: 9px; padding: 2px 4px; }
+.apple-ev-title { font-size: 9px; }
+.day-preview { display: none !important; }
+.stat-pill { font-size: 11px; padding: 6px 12px; }
+}
+@media (max-width: 480px) {
+.header-left h1 { font-size: 20px; }
+.apple-cal-grid { grid-template-columns: repeat(7, minmax(70px, 1fr)); }
+.apple-col { min-height: 110px; }
+.apple-col-num { font-size: 16px; }
+.apple-col-num.is-today { width: 24px; height: 24px; line-height: 24px; }
+.apple-ev-title { font-size: 8px; }
+.apple-ev-detail, .apple-ev-time { font-size: 8px; }
+.card { padding: 16px; }
+.card-title { font-size: 10px; }
+.adv-card { padding: 8px 10px; }
+.adv-card-title { font-size: 12px; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="splash" id="splash">
+  <div class="splash-icon">O</div>
+  <div class="splash-text">Daily Briefing</div>
+  <div class="splash-sub">Ozdemir MD &middot; Cardiovascular Surgery</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<div class="container">
+
+<div class="header reveal d1">
+  <div class="header-left">
+    <h1>Daily Briefing</h1>
+    <p>Ozdemir MD &middot; Cardiovascular Surgery &middot; Izmir Bayrakli City Hospital &middot; March 7, 2026, Saturday</p>
+  </div>
+  <div class="header-right">
+    <div class="stat-pill"><span class="pill-dot" style="background:var(--orange)"></span>8 Tasks</div>
+    <div class="stat-pill"><span class="pill-dot" style="background:var(--accent)"></span>6 Ethics</div>
+    <div class="stat-pill"><span class="pill-dot" style="background:var(--red)"></span>On-Call TOMORROW</div>
+  </div>
+</div>
+
+<div class="daily-quote reveal d1" id="dailyQuote">
+  <div class="q-text">"Less, but better."</div>
+  <div class="q-author">Dieter Rams</div>
+</div>
+
+<div class="apple-cal reveal d2">
+  <div class="apple-cal-head">
+    <div class="apple-cal-title">Weekly Schedule</div>
+    <div class="apple-cal-week">March 7 &ndash; 13, 2026</div>
+  </div>
+  <div class="apple-cal-grid" id="calGrid">
+    <div class="apple-col" data-day="7">
+      <div class="apple-col-head"><div class="apple-col-name">SAT</div><div class="apple-col-num is-today">7</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--green);--ev-bg:var(--green-dim)"><div class="apple-ev-time">20:00</div><div class="apple-ev-title">BJK - GS</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="8">
+      <div class="apple-col-head"><div class="apple-col-name">SUN</div><div class="apple-col-num">8</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-title">On-Call</div><div class="apple-ev-detail">Full day</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="9">
+      <div class="apple-col-head"><div class="apple-col-name">MON</div><div class="apple-col-num">9</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-time">08:00</div><div class="apple-ev-title">Op S1</div><div class="apple-ev-detail">Embiye G. LMCA</div></div>
+        <div class="apple-ev" style="--ev-color:var(--orange);--ev-bg:var(--orange-dim)"><div class="apple-ev-title">Bredesen submission</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="10">
+      <div class="apple-col-head"><div class="apple-col-name">TUE</div><div class="apple-col-num">10</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-time">08:00</div><div class="apple-ev-title">Op S1</div><div class="apple-ev-detail">A.Yilmaz KAH+AY</div></div>
+        <div class="apple-ev" style="--ev-color:var(--green);--ev-bg:var(--green-dim)"><div class="apple-ev-time">20:45</div><div class="apple-ev-title">GS - LIV</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="11">
+      <div class="apple-col-head"><div class="apple-col-name">WED</div><div class="apple-col-num">11</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-time">08:00</div><div class="apple-ev-title">Op S1</div><div class="apple-ev-detail">A.Afifi MY+KAH</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="12">
+      <div class="apple-col-head"><div class="apple-col-name">THU</div><div class="apple-col-num">12</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-time">08:00</div><div class="apple-ev-title">Op S3</div><div class="apple-ev-detail">G.Ozturk KAH</div></div>
+        <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-title">On-Call</div></div>
+      </div>
+    </div>
+    <div class="apple-col" data-day="13">
+      <div class="apple-col-head"><div class="apple-col-name">FRI</div><div class="apple-col-num">13</div></div>
+      <div class="apple-col-body">
+        <div class="apple-ev" style="--ev-color:var(--orange);--ev-bg:var(--orange-dim)"><div class="apple-ev-title">Ethics signature</div></div>
+        <div class="apple-ev" style="--ev-color:var(--orange);--ev-bg:var(--orange-dim)"><div class="apple-ev-title">HALP dataset</div></div>
+        <div class="apple-ev" style="--ev-color:var(--purple);--ev-bg:var(--purple-dim)"><div class="apple-ev-title">Aortic root presentation</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="apple-day-view reveal d2" id="appleDayView"></div>
+
+<div class="tab-bar reveal d3">
+  <button class="tab-btn active" onclick="switchTab('gorevler',this)">Tasks</button>
+  <button class="tab-btn" onclick="switchTab('arastirmalar',this)">Research</button>
+  <button class="tab-btn" onclick="switchTab('casereports',this)">Case Reports</button>
+</div>
+
+<div class="tab-panel active" id="tab-gorevler">
+<div class="card reveal d3">
+  <div class="card-title">Tasks <span class="badge" style="background:var(--orange-dim);color:var(--orange)" id="taskBadge">8 active</span></div>
+  <ul class="task-list" id="taskList">
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p2"></div>
+      <div class="task-body"><div class="task-text">Prof. Banu — Bredesen briefing submission</div><div class="task-meta">Mon 9 &middot; P2</div></div>
+      <span class="task-tag tag-ready">Ready</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p1"></div>
+      <div class="task-body"><div class="task-text">Ihsan Abi — ethics documents signature</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p1"></div>
+      <div class="task-body"><div class="task-text">HALP study — pull dataset</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p1"></div>
+      <div class="task-body"><div class="task-text">Aortic root presentation — revise + complete</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <span class="task-tag tag-active">In Progress</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p3"></div>
+      <div class="task-body"><div class="task-text">Ihsan Abi — urology consultation</div><div class="task-meta">This week &middot; P3</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p2"></div>
+      <div class="task-body"><div class="task-text">Case report — complete</div><div class="task-meta">Ongoing &middot; P2</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p2"></div>
+      <div class="task-body"><div class="task-text">Ismail Abi — endoleak CR revision</div><div class="task-meta">This week &middot; P2</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+    <li class="task-item" onclick="toggleTask(this)">
+      <div class="task-check p2"></div>
+      <div class="task-body"><div class="task-text">Dementia consensus briefing — prepare</div><div class="task-meta">2020 guideline &middot; P2</div></div>
+      <span class="task-tag tag-wait">Waiting</span>
+    </li>
+  </ul>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-arastirmalar">
+<div class="grid reveal d3">
+  <div class="card">
+    <div class="card-title">Ethics Board Studies <span class="badge" style="background:var(--accent-dim);color:var(--accent)">6 studies</span></div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">HALP Score — Isolated CABG</div><span class="ri-code" style="background:var(--red-dim);color:var(--red)">INT-1</span></div></div>
+      <div class="ri-desc">Preoperative HALP score vs POAF + AKI + prolonged ventilation. Lead: I. Peker.<br>Ethics forms ready, awaiting signature.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="60%" style="background:var(--accent)"></div></div><div class="progress-pct">60%</div></div>
+    </div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">INT-2</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">INT-2</span></div></div>
+      <div class="ri-desc hidden">Planning — details to be determined.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+    </div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">INT-3</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">INT-3</span></div></div>
+      <div class="ri-desc hidden">Planning — details to be determined.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+    </div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">NAT-1</div><span class="ri-code" style="background:var(--green-dim);color:var(--green)">NAT-1</span></div></div>
+      <div class="ri-desc hidden">Planning — details to be determined.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--green)"></div></div><div class="progress-pct">5%</div></div>
+    </div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">NAT-2</div><span class="ri-code" style="background:var(--green-dim);color:var(--green)">NAT-2</span></div></div>
+      <div class="ri-desc hidden">Planning — details to be determined.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--green)"></div></div><div class="progress-pct">5%</div></div>
+    </div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">NAT-3</div><span class="ri-code" style="background:var(--green-dim);color:var(--green)">NAT-3</span></div></div>
+      <div class="ri-desc hidden">Planning — details to be determined.</div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--green)"></div></div><div class="progress-pct">5%</div></div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="card-title">Publications &amp; Ideas</div>
+
+    <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+      <div class="ri-header"><div><div class="ri-title">Contegra — RVOT Reconstruction</div><span class="ri-code" style="background:var(--green-dim);color:var(--green)">PUB</span></div></div>
+      <div class="ri-desc">Retrospective &middot; 49 conduits &middot; Supervisor: M. Akyuz<br>Publication in preparation. Conduit outcomes to be published as article.<br><strong style="color:var(--red)">Deadline: End of March 2026</strong></div>
+      <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="80%" style="background:var(--green)"></div></div><div class="progress-pct">80%</div></div>
+    </div>
+
+    <div class="idea-card" onclick="this.querySelector('.idea-desc').classList.toggle('hidden')">
+      <div class="idea-title">Idea: SET &amp; Length of Stay</div>
+      <div class="idea-desc">Sling Exercise Therapy — 1-year physiotherapist-guided program. Primary outcome: length of stay (LOS). Prospective study.</div>
+    </div>
+    <div class="idea-card" onclick="this.querySelector('.idea-desc').classList.toggle('hidden')">
+      <div class="idea-title">Idea: Posterior Pericardiotomy</div>
+      <div class="idea-desc">Posterior pericardiotomy study — details to be determined.</div>
+    </div>
+    <div class="idea-card" onclick="this.querySelector('.idea-desc').classList.toggle('hidden')">
+      <div class="idea-title">Idea: NORD Study</div>
+      <div class="idea-desc">NORD study — details to be determined.</div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<div class="tab-panel" id="tab-casereports">
+<div class="card reveal d3">
+  <div class="card-title">Case Reports <span class="badge" style="background:var(--yellow-dim);color:var(--yellow)">5 active</span></div>
+
+  <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+    <div class="ri-header"><div><div class="ri-title">Endoleak Case Report</div><span class="ri-code" style="background:var(--red-dim);color:var(--red)">CR-1</span></div></div>
+    <div class="ri-desc">Revision needed from Ismail Abi. Endoleak case report writing process.</div>
+    <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="15%" style="background:var(--red)"></div></div><div class="progress-pct">15%</div></div>
+  </div>
+
+  <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+    <div class="ri-header"><div><div class="ri-title">Case Report 2</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">CR-2</span></div></div>
+    <div class="ri-desc hidden">Details to be entered.</div>
+    <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+  </div>
+
+  <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+    <div class="ri-header"><div><div class="ri-title">Case Report 3</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">CR-3</span></div></div>
+    <div class="ri-desc hidden">Details to be entered.</div>
+    <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+  </div>
+
+  <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+    <div class="ri-header"><div><div class="ri-title">Case Report 4</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">CR-4</span></div></div>
+    <div class="ri-desc hidden">Details to be entered.</div>
+    <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+  </div>
+
+  <div class="research-item" onclick="this.querySelector('.ri-desc').classList.toggle('hidden')">
+    <div class="ri-header"><div><div class="ri-title">Case Report 5</div><span class="ri-code" style="background:var(--yellow-dim);color:var(--yellow)">CR-5</span></div></div>
+    <div class="ri-desc hidden">Details to be entered.</div>
+    <div class="ri-progress"><div class="progress-bar"><div class="progress-fill" data-width="5%" style="background:var(--yellow)"></div></div><div class="progress-pct">5%</div></div>
+  </div>
+</div>
+</div>
+
+<div class="grid grid-3 reveal d4">
+  <div class="card">
+    <div class="card-title">Ethics Board</div>
+    <div class="sb-row"><span class="sb-label">Total studies</span><span class="sb-value">6</span></div>
+    <div class="sb-row"><span class="sb-label">INT (interventional)</span><span class="sb-value">3</span></div>
+    <div class="sb-row"><span class="sb-label">NAT (observational)</span><span class="sb-value">3</span></div>
+    <div class="sb-row"><span class="sb-label">Forms ready</span><span class="sb-value" style="color:var(--green)">1</span></div>
+    <div class="sb-row"><span class="sb-label">Awaiting signature</span><span class="sb-value" style="color:var(--orange)">1</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Completed Today</div>
+    <div class="done-item"><span class="done-check">&#10003;</span><span class="done-label">Aortic Root Presentation</span><span class="done-detail">18 slides</span></div>
+    <div class="done-item"><span class="done-check">&#10003;</span><span class="done-label">Bredesen Briefing</span><span class="done-detail">35 ref.</span></div>
+    <div class="done-item"><span class="done-check">&#10003;</span><span class="done-label">Chief of Staff</span><span class="done-detail">Set up</span></div>
+    <div class="done-item"><span class="done-check">&#10003;</span><span class="done-label">Dashboard v4</span><span class="done-detail">Apple Cal</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">System</div>
+    <div class="sys-item"><span><span class="sys-dot on"></span>Inbox Scan</span><span style="font-size:12px;color:var(--green)">06:05</span></div>
+    <div class="sys-item"><span><span class="sys-dot on"></span>Morning Sweep</span><span style="font-size:12px;color:var(--green)">07:00</span></div>
+    <div class="sys-item"><span><span class="sys-dot off"></span>Time Block</span><span style="font-size:12px;color:var(--text-3)">Manual</span></div>
+    <div class="sys-item"><span><span class="sys-dot on"></span>Notion DB</span><span style="font-size:12px;color:var(--green)">Connected</span></div>
+    <div class="sys-item"><span><span class="sys-dot on"></span>Gmail</span><span style="font-size:12px;color:var(--green)">Connected</span></div>
+    <div class="sys-item"><span><span class="sys-dot on"></span>Calendar</span><span style="font-size:12px;color:var(--green)">Connected</span></div>
+  </div>
+</div>
+
+<div class="grid reveal d5" style="margin-bottom:16px">
+  <div class="card">
+    <div class="card-title">Nutrition Specialist — Sleep Stack <span class="badge" style="background:var(--purple-dim);color:var(--purple)">PM</span></div>
+    <div class="supp-list">
+      <div class="supp-item">
+        <div class="supp-name">Collagen</div>
+        <div class="supp-dose">10 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:100%;background:var(--purple)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">Glycine</div>
+        <div class="supp-dose">3 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:30%;background:var(--purple)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">Taurine</div>
+        <div class="supp-dose">2 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:20%;background:var(--purple)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">L-Theanine</div>
+        <div class="supp-dose">200 mg</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:10%;background:var(--purple)"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Nutrition Specialist — Power-Up Stack <span class="badge" style="background:var(--orange-dim);color:var(--orange)">AM</span></div>
+    <div class="supp-list">
+      <div class="supp-item">
+        <div class="supp-name">Collagen</div>
+        <div class="supp-dose">10 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:100%;background:var(--orange)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">Glycine</div>
+        <div class="supp-dose">3 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:30%;background:var(--orange)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">Taurine</div>
+        <div class="supp-dose">2 g</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:20%;background:var(--orange)"></div></div>
+      </div>
+      <div class="supp-item">
+        <div class="supp-name">L-Theanine</div>
+        <div class="supp-dose">200 mg</div>
+        <div class="supp-bar"><div class="supp-bar-fill" style="width:10%;background:var(--orange)"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer reveal d5">Claude Code Chief of Staff &middot; Last updated: March 7, 2026</div>
+
+</div>
+
+<div class="day-preview" id="dayPreview">
+  <div class="day-preview-inner">
+    <div class="day-preview-left">
+      <div class="day-preview-dayname" id="dpDayname"></div>
+      <div class="day-preview-num" id="dpNum"></div>
+    </div>
+    <div class="day-preview-right">
+      <ul class="day-preview-items" id="dpItems"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const dayData = {
+  7: { title:'Saturday, March 7', dayname:'SATURDAY',
+    items: [
+      { time:'20:00', label:'BJK - GS', detail:'Super Lig', color:'var(--green)' }
+    ]},
+  8: { title:'Sunday, March 8', dayname:'SUNDAY',
+    items: [
+      { time:'Full day', label:'On-Call', detail:'CVS duty', color:'var(--red)' }
+    ]},
+  9: { title:'Monday, March 9', dayname:'MONDAY',
+    items: [
+      { time:'08:00', label:'Op S1: Embiye Gursoy 72/F', detail:'CABG (LMCA 90%)', color:'var(--red)' },
+      { time:'', label:'Team: M.Tavli — O.Ozdemir — P.Akbarov', detail:'', color:'var(--text-3)' },
+      { time:'09:00', label:'Pol1: I.Peker | Pol2: M.S.Bademci | Pol3: R.S.Kaya', detail:'', color:'var(--accent)' },
+      { time:'', label:'Bredesen briefing submission — Prof. Banu', detail:'', color:'var(--orange)' }
+    ]},
+  10: { title:'Tuesday, March 10', dayname:'TUESDAY',
+    items: [
+      { time:'08:00', label:'Op S1: Abdurrahman Yilmaz 67/M', detail:'CABG+AVR+MVR+Ascending 47mm', color:'var(--red)' },
+      { time:'', label:'Team: H.Cakir — O.G.Karaca — O.Ozdemir', detail:'', color:'var(--text-3)' },
+      { time:'09:00', label:'Pol1: M.S.Bademci | Pol2: F.Makhvirati | Pol3: A.Kiral', detail:'', color:'var(--accent)' },
+      { time:'20:45', label:'GS - Livingston', detail:'Champions League', color:'var(--green)' }
+    ]},
+  11: { title:'Wednesday, March 11', dayname:'WEDNESDAY',
+    items: [
+      { time:'08:00', label:'Op S1: Ahmed Afifi 61/M', detail:'Moderate MR + CABG', color:'var(--red)' },
+      { time:'', label:'Team: O.G.Karaca — O.Ozdemir — A.Kiral', detail:'', color:'var(--text-3)' },
+      { time:'09:00', label:'Pol1: E.Bal | Pol2: E.D.Sozbilici | Pol3: S.A.Tekeli', detail:'', color:'var(--accent)' },
+      { time:'', label:'Wound Care Council', detail:'', color:'var(--purple)' }
+    ]},
+  12: { title:'Thursday, March 12', dayname:'THURSDAY',
+    items: [
+      { time:'08:00', label:'Op S3: Gulbiye Ozturk 48/F', detail:'CABG', color:'var(--red)' },
+      { time:'', label:'Team: M.S.Bademci — O.Ozdemir — A.D.Afacan', detail:'', color:'var(--text-3)' },
+      { time:'Full day', label:'On-Call', detail:'CVS duty', color:'var(--red)' },
+      { time:'', label:'Carotid Council', detail:'', color:'var(--purple)' }
+    ]},
+  13: { title:'Friday, March 13', dayname:'FRIDAY',
+    items: [
+      { time:'', label:'Ihsan Abi — ethics documents signature', detail:'HALP + Aortic root', color:'var(--orange)' },
+      { time:'', label:'HALP study — pull dataset', detail:'', color:'var(--orange)' },
+      { time:'', label:'Aortic root presentation — revision', detail:'Friday presentation', color:'var(--purple)' },
+      { time:'09:00', label:'Pol1: O.G.Karaca | Pol2: P.Akbarov | Pol3: R.S.Kaya', detail:'', color:'var(--accent)' }
+    ]}
+};
+
+function toggleTask(el) {
+  el.classList.toggle('completed');
+  if (el.classList.contains('completed')) {
+    el.classList.add('fire-complete');
+    createFireParticles(el);
+    setTimeout(() => el.classList.remove('fire-complete'), 1500);
+  }
+  const total = document.querySelectorAll('#taskList .task-item').length;
+  const done = document.querySelectorAll('#taskList .task-item.completed').length;
+  document.getElementById('taskBadge').textContent = (total - done) + ' active';
+}
+
+function createFireParticles(el) {
+  const check = el.querySelector('.task-check');
+  const rect = check.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const colors = ['#ff9f0a','#ffd60a','#ff453a','#ff6b35','#ffcc02'];
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'fire-particle';
+    const size = 3 + Math.random() * 6;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = (cx + (Math.random() - 0.5) * 16) + 'px';
+    p.style.top = cy + 'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.setProperty('--fx', ((Math.random() - 0.5) * 40) + 'px');
+    p.style.animationDuration = (0.5 + Math.random() * 0.5) + 's';
+    p.style.animationDelay = (Math.random() * 0.15) + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1200);
+  }
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(() => {
+    document.querySelectorAll('.progress-fill[data-width]').forEach(bar => { bar.style.width = bar.dataset.width; });
+  }, 100);
+}
+
+const dayPreview = document.getElementById('dayPreview');
+const dpNum = document.getElementById('dpNum');
+const dpDayname = document.getElementById('dpDayname');
+const dpItems = document.getElementById('dpItems');
+
+document.querySelectorAll('.apple-col').forEach(col => {
+  col.addEventListener('mouseenter', (e) => {
+    const num = col.dataset.day;
+    const data = dayData[num];
+    if (!data) return;
+    dpNum.textContent = num;
+    dpDayname.textContent = data.dayname;
+    let html = '';
+    data.items.forEach(item => {
+      html += '<li><span class="dpi-dot" style="background:' + item.color + '"></span><span class="dpi-text">' + item.label + '</span></li>';
+    });
+    dpItems.innerHTML = html;
+    dayPreview.classList.add('show');
+  });
+  col.addEventListener('mousemove', (e) => {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    let x = e.clientX - 300;
+    let y = e.clientY - 40;
+    if (x < 10) x = e.clientX + 20;
+    if (y + 300 > vh) y = vh - 310;
+    if (y < 10) y = 10;
+    dayPreview.style.left = x + 'px';
+    dayPreview.style.top = y + 'px';
+  });
+  col.addEventListener('mouseleave', () => {
+    dayPreview.classList.remove('show');
+  });
+});
+
+const appleDayView = document.getElementById('appleDayView');
+document.querySelectorAll('.apple-col').forEach(col => {
+  col.addEventListener('click', () => {
+    document.querySelectorAll('.apple-col').forEach(c => c.classList.remove('active'));
+    col.classList.add('active');
+    const num = col.dataset.day;
+    const data = dayData[num];
+    if (!data) return;
+    let html = '<div class="adv-header"><div class="adv-title">' + data.title + '</div><button class="adv-close" onclick="closeDayView()">&#10005;</button></div>';
+    html += '<div class="adv-body">';
+    data.items.forEach(item => {
+      html += '<div class="adv-event">';
+      html += '<div class="adv-time">' + (item.time || '') + '</div>';
+      html += '<div class="adv-card" style="--ev-color:' + item.color + ';--ev-bg:' + item.color.replace('var(--','rgba(').replace(')',',0.1)') + '">';
+      html += '<div class="adv-card-title">' + item.label + '</div>';
+      if (item.detail) html += '<div class="adv-card-detail">' + item.detail + '</div>';
+      html += '</div></div>';
+    });
+    html += '</div>';
+    appleDayView.innerHTML = html;
+    appleDayView.classList.add('show');
+    appleDayView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+});
+
+function closeDayView() {
+  appleDayView.classList.remove('show');
+  document.querySelectorAll('.apple-col').forEach(c => c.classList.remove('active'));
+}
+
+const quotes = [
+  { text: '"Less, but better."', author: 'Dieter Rams' },
+  { text: '"Simplicity is the ultimate sophistication."', author: 'Leonardo da Vinci' },
+  { text: '"Perfection is achieved when there is nothing left to take away."', author: 'Antoine de Saint-Exupery' },
+  { text: '"What matters is not speed, but direction."', author: '' },
+  { text: '"Don\'t do something — do the right thing."', author: '' },
+  { text: '"Silence is the most powerful answer."', author: '' },
+  { text: '"Today\'s focus is tomorrow\'s success."', author: '' }
+];
+const q = quotes[new Date().getDay()];
+document.querySelector('.daily-quote .q-text').textContent = q.text;
+document.querySelector('.daily-quote .q-author').textContent = q.author;
+
+setTimeout(() => {
+  document.querySelectorAll('.progress-fill[data-width]').forEach(bar => { bar.style.width = bar.dataset.width; });
+}, 2800);
+</script>
+
+</body>
+</html>
