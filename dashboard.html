@@ -265,7 +265,21 @@ transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
 .task-body { flex: 1; min-width: 0; }
 .task-text { font-size: 13.5px; font-weight: 500; transition: all 0.2s; }
 .task-meta { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.task-loc { font-size: 10px; color: var(--accent); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+.task-loc::before { content: '\25B8'; font-size: 8px; }
 .task-tag { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 100px; white-space: nowrap; flex-shrink: 0; }
+.task-files { display: none; padding: 8px 0 4px 32px; }
+.task-files.show { display: block; animation: revealIn 0.2s ease forwards; }
+.task-file-link {
+display: flex; align-items: center; gap: 8px; padding: 6px 12px; margin-bottom: 4px;
+background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+font-size: 12px; color: var(--text-2); text-decoration: none; cursor: pointer;
+transition: all 0.2s;
+}
+.task-file-link:hover { background: var(--surface-3); color: var(--text); border-color: var(--border-hover); transform: translateX(4px); }
+.task-file-icon { font-size: 14px; flex-shrink: 0; }
+.task-file-name { font-weight: 500; flex: 1; }
+.task-file-type { font-size: 10px; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .tag-wait { background: var(--orange-dim); color: var(--orange); }
 .tag-active { background: var(--accent-dim); color: var(--accent); }
 .tag-ready { background: var(--green-dim); color: var(--green); }
@@ -422,6 +436,7 @@ animation: fireRise 0.9s ease-out forwards;
       <div class="apple-col-body">
         <div class="apple-ev" style="--ev-color:var(--red);--ev-bg:var(--red-dim)"><div class="apple-ev-time">08:00</div><div class="apple-ev-title">Op S1</div><div class="apple-ev-detail">A.Yilmaz KAH+AY</div></div>
         <div class="apple-ev" style="--ev-color:var(--green);--ev-bg:var(--green-dim)"><div class="apple-ev-time">20:45</div><div class="apple-ev-title">GS - LIV</div></div>
+        <div class="apple-ev" style="--ev-color:var(--yellow);--ev-bg:var(--yellow-dim)"><div class="apple-ev-title">Mounjaro inj.</div></div>
       </div>
     </div>
     <div class="apple-col" data-day="11">
@@ -462,44 +477,110 @@ animation: fireRise 0.9s ease-out forwards;
   <ul class="task-list" id="taskList">
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p2"></div>
-      <div class="task-body"><div class="task-text">Prof. Banu — Bredesen briefing submission</div><div class="task-meta">Mon 9 &middot; P2</div></div>
+      <div class="task-body">
+        <div class="task-text">Prof. Banu — Bredesen briefing submission</div>
+        <div class="task-meta">Mon 9 &middot; P2</div>
+        <div class="task-loc">Klinik &rarr; Prof. Banu ofis</div>
+      </div>
       <span class="task-tag tag-ready">Ready</span>
     </li>
+    <div class="task-files" data-task="0">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Bredesen_Brifing_v3.pdf</span><span class="task-file-type">PDF</span></a>
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128202;</span><span class="task-file-name">Bredesen_Refs_35.xlsx</span><span class="task-file-type">Sheet</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p1"></div>
-      <div class="task-body"><div class="task-text">Ihsan Abi — ethics documents signature</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <div class="task-body">
+        <div class="task-text">Ihsan Abi — ethics documents signature</div>
+        <div class="task-meta">Fri 13 &middot; P1</div>
+        <div class="task-loc">A Blok 3. Kat &rarr; Ihsan Abi ofis</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="1">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">HALP_Etik_Basvuru.pdf</span><span class="task-file-type">PDF</span></a>
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Aort_Kok_Etik_Form.pdf</span><span class="task-file-type">PDF</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p1"></div>
-      <div class="task-body"><div class="task-text">HALP study — pull dataset</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <div class="task-body">
+        <div class="task-text">HALP study — pull dataset</div>
+        <div class="task-meta">Fri 13 &middot; P1</div>
+        <div class="task-loc">Hospital Archive &rarr; Digital records</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="2">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128202;</span><span class="task-file-name">HALP_Dataset_Template.xlsx</span><span class="task-file-type">Sheet</span></a>
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">HALP_Protocol_v2.pdf</span><span class="task-file-type">PDF</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p1"></div>
-      <div class="task-body"><div class="task-text">Aortic root presentation — revise + complete</div><div class="task-meta">Fri 13 &middot; P1</div></div>
+      <div class="task-body">
+        <div class="task-text">Aortic root presentation — revise + complete</div>
+        <div class="task-meta">Fri 13 &middot; P1</div>
+        <div class="task-loc">Conference Room &rarr; Friday presentation</div>
+      </div>
       <span class="task-tag tag-active">In Progress</span>
     </li>
+    <div class="task-files" data-task="3">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128202;</span><span class="task-file-name">Aort_Kok_Sunum_v4.pptx</span><span class="task-file-type">Slides</span></a>
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Aort_Kok_Literatur.pdf</span><span class="task-file-type">PDF</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p3"></div>
-      <div class="task-body"><div class="task-text">Ihsan Abi — urology consultation</div><div class="task-meta">This week &middot; P3</div></div>
+      <div class="task-body">
+        <div class="task-text">Ihsan Abi — urology consultation</div>
+        <div class="task-meta">This week &middot; P3</div>
+        <div class="task-loc">Urology Dept. &rarr; Outpatient clinic</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="4"></div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p2"></div>
-      <div class="task-body"><div class="task-text">Case report — complete</div><div class="task-meta">Ongoing &middot; P2</div></div>
+      <div class="task-body">
+        <div class="task-text">Case report — complete</div>
+        <div class="task-meta">Ongoing &middot; P2</div>
+        <div class="task-loc">Research Office</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="5">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Case_Report_Draft.docx</span><span class="task-file-type">Doc</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p2"></div>
-      <div class="task-body"><div class="task-text">Ismail Abi — endoleak CR revision</div><div class="task-meta">This week &middot; P2</div></div>
+      <div class="task-body">
+        <div class="task-text">Ismail Abi — endoleak CR revision</div>
+        <div class="task-meta">This week &middot; P2</div>
+        <div class="task-loc">Ismail Abi ofis &rarr; Revision meeting</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="6">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Endoleak_CR_v1.docx</span><span class="task-file-type">Doc</span></a>
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128444;</span><span class="task-file-name">Endoleak_CT_Images.zip</span><span class="task-file-type">Images</span></a>
+    </div>
+
     <li class="task-item" onclick="toggleTask(this)">
       <div class="task-check p2"></div>
-      <div class="task-body"><div class="task-text">Dementia consensus briefing — prepare</div><div class="task-meta">2020 guideline &middot; P2</div></div>
+      <div class="task-body">
+        <div class="task-text">Dementia consensus briefing — prepare</div>
+        <div class="task-meta">2020 guideline &middot; P2</div>
+        <div class="task-loc">Research Office &rarr; Literature review</div>
+      </div>
       <span class="task-tag tag-wait">Waiting</span>
     </li>
+    <div class="task-files" data-task="7">
+      <a class="task-file-link" href="#" onclick="event.stopPropagation()"><span class="task-file-icon">&#128196;</span><span class="task-file-name">Demans_Konsensus_2020.pdf</span><span class="task-file-type">PDF</span></a>
+    </div>
   </ul>
 </div>
 </div>
@@ -729,7 +810,8 @@ const dayData = {
       { time:'08:00', label:'Op S1: Abdurrahman Yilmaz 67/M', detail:'CABG+AVR+MVR+Ascending 47mm', color:'var(--red)' },
       { time:'', label:'Team: H.Cakir — O.G.Karaca — O.Ozdemir', detail:'', color:'var(--text-3)' },
       { time:'09:00', label:'Pol1: M.S.Bademci | Pol2: F.Makhvirati | Pol3: A.Kiral', detail:'', color:'var(--accent)' },
-      { time:'20:45', label:'GS - Livingston', detail:'Champions League', color:'var(--green)' }
+      { time:'20:45', label:'GS - Livingston', detail:'Champions League', color:'var(--green)' },
+      { time:'', label:'Mounjaro Injection', detail:'Weekly GLP-1', color:'var(--yellow)' }
     ]},
   11: { title:'Wednesday, March 11', dayname:'WEDNESDAY',
     items: [
@@ -755,11 +837,25 @@ const dayData = {
 };
 
 function toggleTask(el) {
+  // Find the files panel right after this task item
+  const filesPanel = el.nextElementSibling;
+  if (filesPanel && filesPanel.classList.contains('task-files')) {
+    const wasShown = filesPanel.classList.contains('show');
+    // Close all file panels first
+    document.querySelectorAll('.task-files.show').forEach(f => f.classList.remove('show'));
+    // Toggle this one
+    if (!wasShown && filesPanel.children.length > 0) {
+      filesPanel.classList.add('show');
+      return; // Don't toggle completion on first click — just show files
+    }
+  }
   el.classList.toggle('completed');
   if (el.classList.contains('completed')) {
     el.classList.add('fire-complete');
     createFireParticles(el);
     setTimeout(() => el.classList.remove('fire-complete'), 1500);
+    // Close files when completing
+    if (filesPanel) filesPanel.classList.remove('show');
   }
   const total = document.querySelectorAll('#taskList .task-item').length;
   const done = document.querySelectorAll('#taskList .task-item.completed').length;
