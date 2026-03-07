@@ -16,7 +16,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             padding: 20px;
             text-align: center;
@@ -37,17 +37,44 @@
             50% { filter: hue-rotate(30deg); }
         }
 
+        /* Navigation tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .nav-tab {
+            padding: 8px 20px;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+        .nav-tab.active {
+            background: rgba(255,255,255,0.1);
+            border-color: #48dbfb;
+            color: #48dbfb;
+        }
+
         .scoreboard {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin: 15px 0;
-            font-size: 1.1rem;
+            gap: 20px;
+            margin: 12px 0;
+            font-size: 1rem;
+            flex-wrap: wrap;
         }
 
         .scoreboard span {
             background: rgba(255,255,255,0.1);
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 20px;
             backdrop-filter: blur(5px);
         }
@@ -55,17 +82,19 @@
         .game-area {
             background: rgba(255,255,255,0.05);
             border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
+            padding: 25px;
+            margin: 15px 0;
             border: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
         .pokemon-display {
             position: relative;
             width: 250px;
             height: 250px;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,14 +107,8 @@
             transition: filter 0.5s ease;
         }
 
-        .pokemon-display img.silhouette {
-            filter: brightness(0) saturate(0);
-        }
-
-        .pokemon-display img.partial {
-            filter: brightness(0.3) saturate(0.2) blur(2px);
-        }
-
+        .pokemon-display img.silhouette { filter: brightness(0) saturate(0); }
+        .pokemon-display img.partial { filter: brightness(0.3) saturate(0.2) blur(2px); }
         .pokemon-display img.revealed {
             filter: none;
             animation: popIn 0.4s ease;
@@ -97,18 +120,15 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        .hint-area {
-            margin: 15px 0;
-            min-height: 60px;
-        }
+        .hint-area { margin: 12px 0; min-height: 50px; }
 
         .hint {
             background: rgba(255,255,255,0.08);
             display: inline-block;
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 12px;
-            margin: 4px;
-            font-size: 0.9rem;
+            margin: 3px;
+            font-size: 0.85rem;
             animation: fadeIn 0.3s ease;
         }
 
@@ -119,9 +139,9 @@
 
         .type-badge {
             display: inline-block;
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 12px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
             text-transform: uppercase;
             margin: 2px;
@@ -130,12 +150,12 @@
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
         }
 
         .option-btn {
-            padding: 14px 20px;
+            padding: 12px 18px;
             border: 2px solid rgba(255,255,255,0.2);
             border-radius: 14px;
             background: rgba(255,255,255,0.06);
@@ -163,10 +183,7 @@
             border-color: #ff6b6b;
         }
 
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.7; }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -174,17 +191,18 @@
         }
 
         .controls {
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .ctrl-btn {
-            padding: 12px 28px;
+            padding: 10px 24px;
             border: none;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s ease;
@@ -192,69 +210,53 @@
 
         .ctrl-btn:hover { transform: translateY(-2px); }
 
-        .btn-hint {
-            background: linear-gradient(135deg, #feca57, #f39c12);
-            color: #1a1a2e;
-        }
+        .btn-hint { background: linear-gradient(135deg, #feca57, #f39c12); color: #1a1a2e; }
+        .btn-next { background: linear-gradient(135deg, #48dbfb, #0abde3); color: #1a1a2e; }
+        .btn-start { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: #fff; font-size: 1.1rem; padding: 14px 36px; }
+        .btn-pokedex { background: linear-gradient(135deg, #ff9ff3, #f368e0); color: #1a1a2e; }
+        .btn-sound { background: rgba(255,255,255,0.15); color: #fff; font-size: 1.2rem; padding: 8px 14px; }
 
-        .btn-next {
-            background: linear-gradient(135deg, #48dbfb, #0abde3);
-            color: #1a1a2e;
-        }
+        .difficulty-select { margin: 15px 0; }
+        .difficulty-select label { display: block; margin-bottom: 8px; font-size: 1rem; }
 
-        .btn-start {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: #fff;
-            font-size: 1.2rem;
-            padding: 16px 40px;
-        }
-
-        .difficulty-select {
-            margin: 20px 0;
-        }
-
-        .difficulty-select label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
-        .diff-buttons {
+        .diff-buttons, .mode-buttons {
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .diff-btn {
-            padding: 10px 24px;
+        .diff-btn, .mode-btn {
+            padding: 8px 20px;
             border: 2px solid rgba(255,255,255,0.3);
             border-radius: 10px;
             background: transparent;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .diff-btn:hover, .diff-btn.active {
+        .diff-btn:hover, .diff-btn.active,
+        .mode-btn:hover, .mode-btn.active {
             background: rgba(255,255,255,0.15);
             border-color: #48dbfb;
         }
 
         .message {
-            font-size: 1.3rem;
-            margin: 10px 0;
+            font-size: 1.2rem;
+            margin: 8px 0;
             font-weight: bold;
-            min-height: 35px;
+            min-height: 30px;
         }
 
         .message.correct-msg { color: #48dbfb; }
         .message.wrong-msg { color: #ff6b6b; }
 
         .round-info {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(255,255,255,0.6);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .timer-bar {
@@ -262,7 +264,7 @@
             height: 6px;
             background: rgba(255,255,255,0.1);
             border-radius: 3px;
-            margin: 10px 0;
+            margin: 8px 0;
             overflow: hidden;
         }
 
@@ -276,14 +278,8 @@
         .timer-fill.warning { background: linear-gradient(90deg, #feca57, #f39c12); }
         .timer-fill.danger { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
 
-        .game-over {
-            animation: fadeIn 0.5s ease;
-        }
-
-        .game-over h2 {
-            font-size: 2rem;
-            margin-bottom: 15px;
-        }
+        .game-over { animation: fadeIn 0.5s ease; }
+        .game-over h2 { font-size: 2rem; margin-bottom: 12px; }
 
         .final-score {
             font-size: 3rem;
@@ -294,9 +290,191 @@
             background-clip: text;
         }
 
-        .streak-display {
-            color: #feca57;
-            font-size: 0.95rem;
+        .streak-display { color: #feca57; }
+
+        /* Lives (survival mode) */
+        .lives { color: #ff6b6b; font-size: 1.1rem; }
+
+        /* Evolution chain */
+        .evo-chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .evo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .evo-item img {
+            width: 60px;
+            height: 60px;
+            image-rendering: pixelated;
+        }
+
+        .evo-item.current { transform: scale(1.2); }
+        .evo-item.current img { border: 2px solid #48dbfb; border-radius: 50%; padding: 2px; }
+
+        .evo-arrow { font-size: 1.5rem; color: rgba(255,255,255,0.4); }
+
+        .evo-item span {
+            font-size: 0.7rem;
+            text-transform: capitalize;
+            color: rgba(255,255,255,0.7);
+            margin-top: 3px;
+        }
+
+        /* Pokedex */
+        .pokedex-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+            margin: 15px 0;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .pokedex-entry {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.2s;
+        }
+
+        .pokedex-entry:hover { background: rgba(255,255,255,0.1); }
+
+        .pokedex-entry img {
+            width: 50px;
+            height: 50px;
+            image-rendering: pixelated;
+        }
+
+        .pokedex-entry.unknown img { filter: brightness(0); }
+        .pokedex-entry.unknown { opacity: 0.4; }
+
+        .pokedex-entry span {
+            display: block;
+            font-size: 0.65rem;
+            text-transform: capitalize;
+            color: rgba(255,255,255,0.7);
+            margin-top: 2px;
+        }
+
+        .pokedex-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            text-align: left;
+            max-width: 500px;
+            margin: 15px auto;
+        }
+
+        .lb-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 10px;
+            margin: 6px 0;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .lb-entry:nth-child(1) { background: rgba(255, 215, 0, 0.15); }
+        .lb-entry:nth-child(2) { background: rgba(192, 192, 192, 0.12); }
+        .lb-entry:nth-child(3) { background: rgba(205, 127, 50, 0.12); }
+
+        .lb-rank {
+            font-weight: bold;
+            width: 30px;
+            font-size: 1.1rem;
+        }
+
+        .lb-info { flex: 1; margin-left: 10px; }
+        .lb-score { font-weight: bold; color: #feca57; }
+        .lb-mode { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Combo display */
+        .combo-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 10;
+            animation: comboAnim 1s ease forwards;
+        }
+
+        @keyframes comboAnim {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+            30% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { opacity: 0; transform: translate(-50%, -80%) scale(1); }
+        }
+
+        /* XP bar */
+        .xp-bar-container {
+            margin: 10px auto;
+            max-width: 300px;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #feca57, #ff9ff3);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .xp-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+
+        /* Trainer level badge */
+        .trainer-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #feca57, #f39c12);
+            color: #1a1a2e;
+            padding: 3px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin: 5px;
         }
 
         /* Type colors */
@@ -324,413 +502,887 @@
             .options-grid { grid-template-columns: 1fr; }
             .pokemon-display { width: 180px; height: 180px; }
             .pokemon-display img { width: 160px; height: 160px; }
+            .nav-tabs { gap: 4px; }
+            .nav-tab { padding: 6px 12px; font-size: 0.8rem; }
+            .pokedex-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); }
         }
     </style>
 </head>
 <body>
+    <canvas id="confetti-canvas"></canvas>
     <div class="container">
         <h1>Pokemon Varyant Tahmin Oyunu</h1>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="navigate('game')">Oyun</button>
+            <button class="nav-tab" onclick="navigate('pokedex')">Pokedex</button>
+            <button class="nav-tab" onclick="navigate('leaderboard')">Skor Tablosu</button>
+        </div>
         <div id="app"></div>
     </div>
 
     <script>
-        const app = document.getElementById('app');
-        const TOTAL_ROUNDS = 10;
-        const TIMER_DURATION = { easy: 20, medium: 15, hard: 10 };
+    const app = document.getElementById('app');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
 
-        let state = {
-            score: 0,
-            round: 0,
-            streak: 0,
-            bestStreak: 0,
-            difficulty: 'medium',
-            hintsUsed: 0,
-            timerInterval: null,
-            timeLeft: 0,
-            answered: false,
-            currentPokemon: null,
-            options: [],
-            hints: [],
-            usedPokemonIds: new Set()
+    // ============ CONSTANTS ============
+    const TOTAL_ROUNDS = 10;
+    const TIMER_DURATION = { easy: 20, medium: 15, hard: 10 };
+    const SURVIVAL_LIVES = 3;
+    const XP_PER_LEVEL = 100;
+
+    // ============ POKEMON POOL (100+) ============
+    const POKEMON_POOL = [
+        // Gen 1
+        {id:1,name:'bulbasaur'},{id:2,name:'ivysaur'},{id:3,name:'venusaur'},
+        {id:4,name:'charmander'},{id:5,name:'charmeleon'},{id:6,name:'charizard'},
+        {id:7,name:'squirtle'},{id:8,name:'wartortle'},{id:9,name:'blastoise'},
+        {id:25,name:'pikachu'},{id:26,name:'raichu'},{id:35,name:'clefairy'},
+        {id:37,name:'vulpix'},{id:38,name:'ninetales'},{id:39,name:'jigglypuff'},
+        {id:52,name:'meowth'},{id:54,name:'psyduck'},{id:55,name:'golduck'},
+        {id:58,name:'growlithe'},{id:59,name:'arcanine'},{id:63,name:'abra'},
+        {id:65,name:'alakazam'},{id:66,name:'machop'},{id:68,name:'machamp'},
+        {id:74,name:'geodude'},{id:77,name:'ponyta'},{id:78,name:'rapidash'},
+        {id:92,name:'gastly'},{id:93,name:'haunter'},{id:94,name:'gengar'},
+        {id:104,name:'cubone'},{id:123,name:'scyther'},{id:126,name:'magmar'},
+        {id:129,name:'magikarp'},{id:130,name:'gyarados'},{id:131,name:'lapras'},
+        {id:133,name:'eevee'},{id:134,name:'vaporeon'},{id:135,name:'jolteon'},
+        {id:136,name:'flareon'},{id:143,name:'snorlax'},{id:144,name:'articuno'},
+        {id:145,name:'zapdos'},{id:146,name:'moltres'},{id:147,name:'dratini'},
+        {id:149,name:'dragonite'},{id:150,name:'mewtwo'},{id:151,name:'mew'},
+        // Gen 2
+        {id:152,name:'chikorita'},{id:155,name:'cyndaquil'},{id:157,name:'typhlosion'},
+        {id:158,name:'totodile'},{id:160,name:'feraligatr'},{id:175,name:'togepi'},
+        {id:176,name:'togetic'},{id:179,name:'mareep'},{id:181,name:'ampharos'},
+        {id:196,name:'espeon'},{id:197,name:'umbreon'},{id:212,name:'scizor'},
+        {id:214,name:'heracross'},{id:229,name:'houndoom'},{id:248,name:'tyranitar'},
+        {id:249,name:'lugia'},{id:250,name:'ho-oh'},{id:251,name:'celebi'},
+        // Gen 3
+        {id:252,name:'treecko'},{id:255,name:'torchic'},{id:257,name:'blaziken'},
+        {id:258,name:'mudkip'},{id:260,name:'swampert'},{id:282,name:'gardevoir'},
+        {id:302,name:'sableye'},{id:330,name:'flygon'},{id:350,name:'milotic'},
+        {id:359,name:'absol'},{id:373,name:'salamence'},{id:376,name:'metagross'},
+        {id:380,name:'latias'},{id:381,name:'latios'},{id:384,name:'rayquaza'},
+        // Gen 4
+        {id:387,name:'turtwig'},{id:390,name:'chimchar'},{id:392,name:'infernape'},
+        {id:393,name:'piplup'},{id:395,name:'empoleon'},{id:403,name:'shinx'},
+        {id:405,name:'luxray'},{id:445,name:'garchomp'},{id:448,name:'lucario'},
+        {id:461,name:'weavile'},{id:468,name:'togekiss'},{id:470,name:'leafeon'},
+        {id:471,name:'glaceon'},{id:475,name:'gallade'},{id:483,name:'dialga'},
+        {id:484,name:'palkia'},{id:487,name:'giratina'},
+        // Gen 5
+        {id:495,name:'snivy'},{id:498,name:'tepig'},{id:501,name:'oshawott'},
+        {id:553,name:'krookodile'},{id:571,name:'zoroark'},{id:609,name:'chandelure'},
+        {id:612,name:'haxorus'},{id:635,name:'hydreigon'},{id:637,name:'volcarona'},
+        // Gen 6+
+        {id:650,name:'chespin'},{id:653,name:'fennekin'},{id:656,name:'froakie'},
+        {id:658,name:'greninja'},{id:700,name:'sylveon'},{id:706,name:'goodra'},
+        {id:718,name:'zygarde'},{id:722,name:'rowlet'},{id:724,name:'decidueye'},
+        {id:725,name:'litten'},{id:727,name:'incineroar'},{id:728,name:'popplio'},
+        {id:778,name:'mimikyu'},{id:802,name:'marshadow'},
+    ];
+
+    const TYPE_NAMES_TR = {
+        normal:'Normal',fire:'Ates',water:'Su',electric:'Elektrik',
+        grass:'Bitki',ice:'Buz',fighting:'Dovus',poison:'Zehir',
+        ground:'Toprak',flying:'Ucus',psychic:'Psisik',bug:'Bocek',
+        rock:'Kaya',ghost:'Hayalet',dragon:'Ejderha',dark:'Karanlik',
+        steel:'Celik',fairy:'Peri'
+    };
+
+    const STAT_NAMES_TR = {
+        hp:'HP',attack:'Saldiri',defense:'Savunma',
+        'special-attack':'Ozel Saldiri','special-defense':'Ozel Savunma',speed:'Hiz'
+    };
+
+    // ============ STATE ============
+    let state = {
+        score: 0, round: 0, streak: 0, bestStreak: 0,
+        difficulty: 'medium', gameMode: 'classic',
+        hintsUsed: 0, totalHintsUsed: 0,
+        timerInterval: null, timeLeft: 0,
+        answered: false, currentPokemon: null,
+        options: [], hints: [],
+        usedPokemonIds: new Set(),
+        lives: SURVIVAL_LIVES,
+        soundEnabled: true,
+        currentPage: 'game',
+        roundResults: []
+    };
+
+    // ============ PERSISTENCE ============
+    function loadSave() {
+        try {
+            const d = JSON.parse(localStorage.getItem('pokemon_game_save') || '{}');
+            return {
+                pokedex: new Set(d.pokedex || []),
+                leaderboard: d.leaderboard || [],
+                totalXP: d.totalXP || 0,
+                gamesPlayed: d.gamesPlayed || 0
+            };
+        } catch { return { pokedex: new Set(), leaderboard: [], totalXP: 0, gamesPlayed: 0 }; }
+    }
+
+    function savePersistent() {
+        const d = {
+            pokedex: [...persist.pokedex],
+            leaderboard: persist.leaderboard,
+            totalXP: persist.totalXP,
+            gamesPlayed: persist.gamesPlayed
         };
+        localStorage.setItem('pokemon_game_save', JSON.stringify(d));
+    }
 
-        // Pokemon with interesting regional/mega/other variants
-        const POKEMON_POOL = [
-            // Gen 1
-            { id: 1, name: 'bulbasaur' }, { id: 4, name: 'charmander' }, { id: 7, name: 'squirtle' },
-            { id: 25, name: 'pikachu' }, { id: 6, name: 'charizard' }, { id: 9, name: 'blastoise' },
-            { id: 3, name: 'venusaur' }, { id: 39, name: 'jigglypuff' }, { id: 52, name: 'meowth' },
-            { id: 54, name: 'psyduck' }, { id: 58, name: 'growlithe' }, { id: 77, name: 'ponyta' },
-            { id: 94, name: 'gengar' }, { id: 129, name: 'magikarp' }, { id: 130, name: 'gyarados' },
-            { id: 131, name: 'lapras' }, { id: 133, name: 'eevee' }, { id: 143, name: 'snorlax' },
-            { id: 150, name: 'mewtwo' }, { id: 151, name: 'mew' },
-            // Gen 2
-            { id: 152, name: 'chikorita' }, { id: 155, name: 'cyndaquil' }, { id: 158, name: 'totodile' },
-            { id: 175, name: 'togepi' }, { id: 196, name: 'espeon' }, { id: 197, name: 'umbreon' },
-            { id: 248, name: 'tyranitar' }, { id: 249, name: 'lugia' }, { id: 250, name: 'ho-oh' },
-            // Gen 3
-            { id: 252, name: 'treecko' }, { id: 255, name: 'torchic' }, { id: 258, name: 'mudkip' },
-            { id: 282, name: 'gardevoir' }, { id: 373, name: 'salamence' }, { id: 376, name: 'metagross' },
-            { id: 384, name: 'rayquaza' }, { id: 445, name: 'garchomp' },
-            // Gen 4
-            { id: 387, name: 'turtwig' }, { id: 390, name: 'chimchar' }, { id: 393, name: 'piplup' },
-            { id: 448, name: 'lucario' }, { id: 471, name: 'glaceon' }, { id: 470, name: 'leafeon' },
-            // Gen 5
-            { id: 495, name: 'snivy' }, { id: 498, name: 'tepig' }, { id: 501, name: 'oshawott' },
-            { id: 571, name: 'zoroark' }, { id: 609, name: 'chandelure' },
-            // Gen 6+
-            { id: 650, name: 'chespin' }, { id: 653, name: 'fennekin' }, { id: 656, name: 'froakie' },
-            { id: 700, name: 'sylveon' }, { id: 722, name: 'rowlet' }, { id: 725, name: 'litten' },
-            { id: 728, name: 'popplio' }, { id: 778, name: 'mimikyu' },
-        ];
+    let persist = loadSave();
 
-        const TYPE_NAMES_TR = {
-            normal: 'Normal', fire: 'Ates', water: 'Su', electric: 'Elektrik',
-            grass: 'Bitki', ice: 'Buz', fighting: 'Dovus', poison: 'Zehir',
-            ground: 'Toprak', flying: 'Ucus', psychic: 'Psisik', bug: 'Bocek',
-            rock: 'Kaya', ghost: 'Hayalet', dragon: 'Ejderha', dark: 'Karanlik',
-            steel: 'Celik', fairy: 'Peri'
-        };
+    function getTrainerLevel() {
+        return Math.floor(persist.totalXP / XP_PER_LEVEL) + 1;
+    }
 
-        function shuffle(arr) {
-            const a = [...arr];
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
+    function getXPProgress() {
+        return persist.totalXP % XP_PER_LEVEL;
+    }
+
+    // ============ SOUND ENGINE ============
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playSound(type) {
+        if (!state.soundEnabled) return;
+        try {
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            switch(type) {
+                case 'correct':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.1);
+                    osc.frequency.setValueAtTime(784, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.3, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.4);
+                    break;
+                case 'wrong':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.setValueAtTime(150, now + 0.15);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.2, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                    break;
+                case 'hint':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(550, now + 0.08);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.15, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                    break;
+                case 'tick':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.05, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                    break;
+                case 'levelup':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.12);
+                    osc.frequency.setValueAtTime(784, now + 0.24);
+                    osc.frequency.setValueAtTime(1047, now + 0.36);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.3, now + 0.55);
+                    osc.start(now);
+                    osc.stop(now + 0.6);
+                    break;
+                case 'gameover':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(392, now);
+                    osc.frequency.setValueAtTime(330, now + 0.2);
+                    osc.frequency.setValueAtTime(262, now + 0.4);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialApproachTarget(0.001, 0.4, now + 0.65);
+                    osc.start(now);
+                    osc.stop(now + 0.7);
+                    break;
             }
-            return a;
-        }
+        } catch(e) {}
+    }
 
-        function renderMenu() {
-            app.innerHTML = `
-                <div class="game-area">
-                    <p style="font-size:1.1rem; margin-bottom:20px; color:rgba(255,255,255,0.8);">
-                        Pokemon'un silüetine, ipuclarina ve tiplerine bakarak hangi Pokemon oldugunu tahmin et!
-                    </p>
-                    <div class="difficulty-select">
-                        <label>Zorluk Seviyesi:</label>
-                        <div class="diff-buttons">
-                            <button class="diff-btn ${state.difficulty === 'easy' ? 'active' : ''}" onclick="setDifficulty('easy')">Kolay</button>
-                            <button class="diff-btn ${state.difficulty === 'medium' ? 'active' : ''}" onclick="setDifficulty('medium')">Orta</button>
-                            <button class="diff-btn ${state.difficulty === 'hard' ? 'active' : ''}" onclick="setDifficulty('hard')">Zor</button>
-                        </div>
-                    </div>
-                    <br>
-                    <button class="ctrl-btn btn-start" onclick="startGame()">Oyunu Baslat!</button>
-                </div>
-            `;
-        }
+    // ============ CONFETTI ============
+    let confettiParticles = [];
+    let confettiAnimating = false;
 
-        window.setDifficulty = function(d) {
-            state.difficulty = d;
-            renderMenu();
-        };
+    function resizeConfetti() {
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
 
-        window.startGame = async function() {
-            state.score = 0;
-            state.round = 0;
-            state.streak = 0;
-            state.bestStreak = 0;
-            state.hintsUsed = 0;
-            state.usedPokemonIds = new Set();
-            await nextRound();
-        };
-
-        async function nextRound() {
-            state.round++;
-            state.answered = false;
-            state.hints = [];
-
-            if (state.round > TOTAL_ROUNDS) {
-                renderGameOver();
-                return;
-            }
-
-            app.innerHTML = `
-                <div class="scoreboard">
-                    <span>Skor: ${state.score}</span>
-                    <span>Tur: ${state.round}/${TOTAL_ROUNDS}</span>
-                    <span class="streak-display">Seri: ${state.streak}</span>
-                </div>
-                <div class="game-area">
-                    <p style="color:rgba(255,255,255,0.5);">Pokemon yukleniyor...</p>
-                </div>
-            `;
-
-            try {
-                // Pick a random pokemon not yet used
-                let available = POKEMON_POOL.filter(p => !state.usedPokemonIds.has(p.id));
-                if (available.length < 4) {
-                    state.usedPokemonIds.clear();
-                    available = POKEMON_POOL;
-                }
-
-                const shuffled = shuffle(available);
-                const correct = shuffled[0];
-                state.usedPokemonIds.add(correct.id);
-
-                // Get wrong options from remaining
-                const wrongPool = POKEMON_POOL.filter(p => p.id !== correct.id);
-                const wrongOptions = shuffle(wrongPool).slice(0, 3);
-
-                const options = shuffle([correct, ...wrongOptions]);
-
-                // Fetch pokemon data
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${correct.id}`);
-                const data = await response.json();
-
-                const speciesRes = await fetch(data.species.url);
-                const speciesData = await speciesRes.json();
-
-                state.currentPokemon = {
-                    id: correct.id,
-                    name: correct.name,
-                    data: data,
-                    species: speciesData
-                };
-                state.options = options;
-
-                renderRound();
-            } catch (err) {
-                app.innerHTML = `
-                    <div class="game-area">
-                        <p>Hata olustu: ${err.message}</p>
-                        <button class="ctrl-btn btn-next" onclick="nextRound()">Tekrar Dene</button>
-                    </div>
-                `;
-            }
-        }
-
-        function renderRound() {
-            const pokemon = state.currentPokemon;
-            const imgUrl = pokemon.data.sprites.other['official-artwork'].front_default
-                || pokemon.data.sprites.front_default;
-
-            const imgClass = state.answered ? 'revealed' : (state.difficulty === 'easy' ? 'partial' : 'silhouette');
-            const timerMax = TIMER_DURATION[state.difficulty];
-
-            app.innerHTML = `
-                <div class="scoreboard">
-                    <span>Skor: ${state.score}</span>
-                    <span>Tur: ${state.round}/${TOTAL_ROUNDS}</span>
-                    <span class="streak-display">Seri: ${state.streak}</span>
-                </div>
-                <div class="game-area">
-                    <div class="round-info">Bu Pokemon'u taniyabilir misin?</div>
-                    <div class="timer-bar">
-                        <div class="timer-fill" id="timerFill" style="width:100%"></div>
-                    </div>
-                    <div class="pokemon-display">
-                        <img src="${imgUrl}" class="${imgClass}" id="pokemonImg" alt="Pokemon">
-                    </div>
-                    <div class="hint-area" id="hintArea">
-                        ${state.hints.map(h => `<span class="hint">${h}</span>`).join('')}
-                    </div>
-                    <div class="message" id="message"></div>
-                    <div class="options-grid" id="optionsGrid">
-                        ${state.options.map(o => `
-                            <button class="option-btn" onclick="guess('${o.name}')" ${state.answered ? 'disabled' : ''}>
-                                ${o.name}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div class="controls">
-                        ${!state.answered ? `<button class="ctrl-btn btn-hint" onclick="getHint()">Ipucu (${3 - state.hints.length} kaldi)</button>` : ''}
-                        ${state.answered ? `<button class="ctrl-btn btn-next" onclick="nextRound()">Sonraki &rarr;</button>` : ''}
-                    </div>
-                </div>
-            `;
-
-            if (!state.answered) {
-                startTimer(timerMax);
-            }
-        }
-
-        function startTimer(seconds) {
-            clearInterval(state.timerInterval);
-            state.timeLeft = seconds * 10; // Use 10ths of second for smooth bar
-            const max = state.timeLeft;
-
-            state.timerInterval = setInterval(() => {
-                state.timeLeft--;
-                const pct = (state.timeLeft / max) * 100;
-                const fill = document.getElementById('timerFill');
-                if (!fill) { clearInterval(state.timerInterval); return; }
-
-                fill.style.width = pct + '%';
-                if (pct < 25) fill.className = 'timer-fill danger';
-                else if (pct < 50) fill.className = 'timer-fill warning';
-
-                if (state.timeLeft <= 0) {
-                    clearInterval(state.timerInterval);
-                    if (!state.answered) timeUp();
-                }
-            }, 100);
-        }
-
-        function timeUp() {
-            state.answered = true;
-            state.streak = 0;
-            const msg = document.getElementById('message');
-            if (msg) {
-                msg.className = 'message wrong-msg';
-                msg.textContent = `Sure doldu! Cevap: ${state.currentPokemon.name}`;
-            }
-            revealPokemon(null, false);
-        }
-
-        window.guess = function(name) {
-            if (state.answered) return;
-            state.answered = true;
-            clearInterval(state.timerInterval);
-
-            const isCorrect = name === state.currentPokemon.name;
-            const msg = document.getElementById('message');
-            const buttons = document.querySelectorAll('.option-btn');
-
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent.trim() === state.currentPokemon.name) {
-                    btn.classList.add('correct');
-                } else if (btn.textContent.trim() === name && !isCorrect) {
-                    btn.classList.add('wrong');
-                }
+    function spawnConfetti(count = 60) {
+        const colors = ['#ff6b6b','#feca57','#48dbfb','#ff9ff3','#1dd1a1','#54a0ff'];
+        for (let i = 0; i < count; i++) {
+            confettiParticles.push({
+                x: Math.random() * confettiCanvas.width,
+                y: -10 - Math.random() * 50,
+                w: 6 + Math.random() * 6,
+                h: 4 + Math.random() * 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                vx: (Math.random() - 0.5) * 4,
+                vy: 2 + Math.random() * 4,
+                rot: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.2,
+                life: 1
             });
+        }
+        if (!confettiAnimating) animateConfetti();
+    }
 
-            if (isCorrect) {
-                const timeBonus = Math.floor(state.timeLeft / 10);
-                const hintPenalty = state.hints.length * 5;
-                const diffMultiplier = { easy: 1, medium: 1.5, hard: 2 }[state.difficulty];
-                const streakBonus = Math.min(state.streak * 3, 15);
-                const points = Math.max(5, Math.floor((10 + timeBonus + streakBonus - hintPenalty) * diffMultiplier));
+    function animateConfetti() {
+        confettiAnimating = true;
+        confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
 
-                state.score += points;
-                state.streak++;
-                if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+        confettiParticles = confettiParticles.filter(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.1;
+            p.rot += p.rotSpeed;
+            p.life -= 0.005;
 
-                msg.className = 'message correct-msg';
-                msg.textContent = `Dogru! +${points} puan ${state.streak > 1 ? `(${state.streak}x seri!)` : ''}`;
+            if (p.life <= 0 || p.y > confettiCanvas.height + 20) return false;
+
+            confettiCtx.save();
+            confettiCtx.translate(p.x, p.y);
+            confettiCtx.rotate(p.rot);
+            confettiCtx.globalAlpha = p.life;
+            confettiCtx.fillStyle = p.color;
+            confettiCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            confettiCtx.restore();
+            return true;
+        });
+
+        if (confettiParticles.length > 0) {
+            requestAnimationFrame(animateConfetti);
+        } else {
+            confettiAnimating = false;
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+    }
+
+    // ============ UTILS ============
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    // ============ NAVIGATION ============
+    window.navigate = function(page) {
+        state.currentPage = page;
+        document.querySelectorAll('.nav-tab').forEach((t, i) => {
+            t.classList.toggle('active', ['game','pokedex','leaderboard'][i] === page);
+        });
+        if (page === 'game') renderMenu();
+        else if (page === 'pokedex') renderPokedex();
+        else if (page === 'leaderboard') renderLeaderboard();
+    };
+
+    // ============ MENU ============
+    function renderMenu() {
+        clearInterval(state.timerInterval);
+        const level = getTrainerLevel();
+        const xpProg = getXPProgress();
+
+        app.innerHTML = `
+            <div class="game-area">
+                <div class="trainer-badge">Trainer Lv.${level}</div>
+                <div class="xp-bar-container">
+                    <div class="xp-bar"><div class="xp-fill" style="width:${xpProg}%"></div></div>
+                    <div class="xp-label">${xpProg} / ${XP_PER_LEVEL} XP</div>
+                </div>
+                <p style="font-size:0.85rem; margin:8px 0; color:rgba(255,255,255,0.5);">
+                    ${persist.gamesPlayed} oyun oynandi | Pokedex: ${persist.pokedex.size}/${POKEMON_POOL.length}
+                </p>
+                <hr style="border-color:rgba(255,255,255,0.1); margin:12px 0;">
+                <p style="font-size:1rem; margin-bottom:15px; color:rgba(255,255,255,0.8);">
+                    Pokemon'un silüetine bakarak tahmin et!
+                </p>
+
+                <div class="difficulty-select">
+                    <label>Oyun Modu:</label>
+                    <div class="mode-buttons">
+                        <button class="mode-btn ${state.gameMode==='classic'?'active':''}" onclick="setMode('classic')">Klasik</button>
+                        <button class="mode-btn ${state.gameMode==='survival'?'active':''}" onclick="setMode('survival')">Hayatta Kal</button>
+                        <button class="mode-btn ${state.gameMode==='speedrun'?'active':''}" onclick="setMode('speedrun')">Hiz Turu</button>
+                    </div>
+                </div>
+
+                <div class="difficulty-select">
+                    <label>Zorluk:</label>
+                    <div class="diff-buttons">
+                        <button class="diff-btn ${state.difficulty==='easy'?'active':''}" onclick="setDifficulty('easy')">Kolay</button>
+                        <button class="diff-btn ${state.difficulty==='medium'?'active':''}" onclick="setDifficulty('medium')">Orta</button>
+                        <button class="diff-btn ${state.difficulty==='hard'?'active':''}" onclick="setDifficulty('hard')">Zor</button>
+                    </div>
+                </div>
+
+                <div style="margin:10px 0; font-size:0.8rem; color:rgba(255,255,255,0.4);">
+                    ${state.gameMode === 'classic' ? '10 turda en yuksek skoru topla' :
+                      state.gameMode === 'survival' ? '3 canin var, yanlis cevap = can kaybi' :
+                      '5 saniye! Hizli ol!'}
+                </div>
+
+                <br>
+                <div style="display:flex; justify-content:center; gap:10px; align-items:center;">
+                    <button class="ctrl-btn btn-start" onclick="startGame()">Oyunu Baslat!</button>
+                    <button class="ctrl-btn btn-sound" onclick="toggleSound()" title="Ses">${state.soundEnabled ? '🔊' : '🔇'}</button>
+                </div>
+            </div>
+        `;
+    }
+
+    window.setDifficulty = function(d) { state.difficulty = d; renderMenu(); };
+    window.setMode = function(m) { state.gameMode = m; renderMenu(); };
+    window.toggleSound = function() { state.soundEnabled = !state.soundEnabled; renderMenu(); };
+
+    // ============ START GAME ============
+    window.startGame = async function() {
+        state.score = 0;
+        state.round = 0;
+        state.streak = 0;
+        state.bestStreak = 0;
+        state.hintsUsed = 0;
+        state.totalHintsUsed = 0;
+        state.usedPokemonIds = new Set();
+        state.lives = SURVIVAL_LIVES;
+        state.roundResults = [];
+        await nextRound();
+    };
+
+    // ============ NEXT ROUND ============
+    async function nextRound() {
+        state.round++;
+        state.answered = false;
+        state.hints = [];
+
+        // Check game over conditions
+        if (state.gameMode === 'classic' && state.round > TOTAL_ROUNDS) {
+            endGame(); return;
+        }
+        if (state.gameMode === 'survival' && state.lives <= 0) {
+            endGame(); return;
+        }
+
+        const roundLabel = state.gameMode === 'survival'
+            ? `Tur ${state.round}`
+            : `Tur ${state.round}/${TOTAL_ROUNDS}`;
+
+        app.innerHTML = `
+            <div class="scoreboard">
+                <span>Skor: ${state.score}</span>
+                <span>${roundLabel}</span>
+                ${state.gameMode === 'survival' ? `<span class="lives">${'❤️'.repeat(state.lives)}</span>` : ''}
+                <span class="streak-display">Seri: ${state.streak}</span>
+            </div>
+            <div class="game-area">
+                <p style="color:rgba(255,255,255,0.5);">Pokemon yukleniyor...</p>
+            </div>
+        `;
+
+        try {
+            let available = POKEMON_POOL.filter(p => !state.usedPokemonIds.has(p.id));
+            if (available.length < 4) { state.usedPokemonIds.clear(); available = POKEMON_POOL; }
+
+            const correct = shuffle(available)[0];
+            state.usedPokemonIds.add(correct.id);
+
+            const wrongOptions = shuffle(POKEMON_POOL.filter(p => p.id !== correct.id)).slice(0, 3);
+            const options = shuffle([correct, ...wrongOptions]);
+
+            const [pokemonRes, ] = await Promise.all([
+                fetch(`https://pokeapi.co/api/v2/pokemon/${correct.id}`),
+            ]);
+            const data = await pokemonRes.json();
+            const speciesData = await (await fetch(data.species.url)).json();
+
+            state.currentPokemon = { id: correct.id, name: correct.name, data, species: speciesData };
+            state.options = options;
+
+            renderRound();
+        } catch (err) {
+            app.innerHTML = `
+                <div class="game-area">
+                    <p>Hata: ${err.message}</p>
+                    <button class="ctrl-btn btn-next" onclick="nextRound()">Tekrar Dene</button>
+                </div>
+            `;
+        }
+    }
+
+    // ============ RENDER ROUND ============
+    function renderRound() {
+        const pokemon = state.currentPokemon;
+        const imgUrl = pokemon.data.sprites.other['official-artwork'].front_default || pokemon.data.sprites.front_default;
+
+        const imgClass = state.answered ? 'revealed' : (state.difficulty === 'easy' ? 'partial' : 'silhouette');
+
+        let timerMax = TIMER_DURATION[state.difficulty];
+        if (state.gameMode === 'speedrun') timerMax = 5;
+
+        const roundLabel = state.gameMode === 'survival'
+            ? `Tur ${state.round}`
+            : `Tur ${state.round}/${TOTAL_ROUNDS}`;
+
+        app.innerHTML = `
+            <div class="scoreboard">
+                <span>Skor: ${state.score}</span>
+                <span>${roundLabel}</span>
+                ${state.gameMode === 'survival' ? `<span class="lives">${'❤️'.repeat(state.lives)}</span>` : ''}
+                <span class="streak-display">Seri: ${state.streak}</span>
+            </div>
+            <div class="game-area">
+                <div class="round-info">Bu Pokemon'u taniyabilir misin?</div>
+                <div class="timer-bar">
+                    <div class="timer-fill" id="timerFill" style="width:100%"></div>
+                </div>
+                <div class="pokemon-display">
+                    <img src="${imgUrl}" class="${imgClass}" id="pokemonImg" alt="Pokemon">
+                </div>
+                <div class="hint-area" id="hintArea">
+                    ${state.hints.map(h => `<span class="hint">${h}</span>`).join('')}
+                </div>
+                <div class="message" id="message"></div>
+                <div id="evoChain"></div>
+                <div class="options-grid" id="optionsGrid">
+                    ${state.options.map(o => `
+                        <button class="option-btn" onclick="guess('${o.name}')" ${state.answered ? 'disabled' : ''}>
+                            ${o.name}
+                        </button>
+                    `).join('')}
+                </div>
+                <div class="controls">
+                    ${!state.answered ? `<button class="ctrl-btn btn-hint" onclick="getHint()">Ipucu (${3 - state.hints.length})</button>` : ''}
+                    ${state.answered ? `<button class="ctrl-btn btn-next" onclick="nextRound()">Sonraki &rarr;</button>` : ''}
+                </div>
+            </div>
+        `;
+
+        if (!state.answered) startTimer(timerMax);
+    }
+
+    // ============ TIMER ============
+    function startTimer(seconds) {
+        clearInterval(state.timerInterval);
+        state.timeLeft = seconds * 10;
+        const max = state.timeLeft;
+        let lastTickAt = max;
+
+        state.timerInterval = setInterval(() => {
+            state.timeLeft--;
+            const pct = (state.timeLeft / max) * 100;
+            const fill = document.getElementById('timerFill');
+            if (!fill) { clearInterval(state.timerInterval); return; }
+
+            fill.style.width = pct + '%';
+            if (pct < 25) {
+                fill.className = 'timer-fill danger';
+                // tick sound in last 25%
+                if (state.timeLeft % 10 === 0 && state.timeLeft !== lastTickAt) {
+                    lastTickAt = state.timeLeft;
+                    playSound('tick');
+                }
+            }
+            else if (pct < 50) fill.className = 'timer-fill warning';
+
+            if (state.timeLeft <= 0) {
+                clearInterval(state.timerInterval);
+                if (!state.answered) timeUp();
+            }
+        }, 100);
+    }
+
+    function timeUp() {
+        state.answered = true;
+        state.streak = 0;
+        if (state.gameMode === 'survival') state.lives--;
+        playSound('wrong');
+
+        state.roundResults.push({ name: state.currentPokemon.name, correct: false });
+
+        const msg = document.getElementById('message');
+        if (msg) {
+            msg.className = 'message wrong-msg';
+            msg.textContent = `Sure doldu! Cevap: ${state.currentPokemon.name}`;
+            if (state.gameMode === 'survival' && state.lives <= 0)
+                msg.textContent += ' | Son canini kaybettin!';
+        }
+        revealPokemon(false);
+    }
+
+    // ============ GUESS ============
+    window.guess = function(name) {
+        if (state.answered) return;
+        state.answered = true;
+        clearInterval(state.timerInterval);
+
+        const isCorrect = name === state.currentPokemon.name;
+        const msg = document.getElementById('message');
+        const buttons = document.querySelectorAll('.option-btn');
+
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            const btnName = btn.textContent.trim();
+            if (btnName === state.currentPokemon.name) btn.classList.add('correct');
+            else if (btnName === name && !isCorrect) btn.classList.add('wrong');
+        });
+
+        if (isCorrect) {
+            const timeBonus = Math.floor(state.timeLeft / 10);
+            const hintPenalty = state.hints.length * 5;
+            const diffMult = { easy: 1, medium: 1.5, hard: 2 }[state.difficulty];
+            const modeMult = state.gameMode === 'speedrun' ? 2 : 1;
+            const streakBonus = Math.min(state.streak * 3, 15);
+            const points = Math.max(5, Math.floor((10 + timeBonus + streakBonus - hintPenalty) * diffMult * modeMult));
+
+            state.score += points;
+            state.streak++;
+            if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+            // XP
+            const oldLevel = getTrainerLevel();
+            persist.totalXP += Math.floor(points / 2);
+            persist.pokedex.add(state.currentPokemon.id);
+            savePersistent();
+            const newLevel = getTrainerLevel();
+
+            playSound('correct');
+            spawnConfetti(state.streak >= 3 ? 80 : 40);
+
+            msg.className = 'message correct-msg';
+            let msgText = `Dogru! +${points} puan`;
+            if (state.streak > 1) msgText += ` (${state.streak}x seri!)`;
+            if (newLevel > oldLevel) {
+                msgText += ` | SEVIYE ATLADIN! Lv.${newLevel}`;
+                playSound('levelup');
+                spawnConfetti(100);
+            }
+            msg.textContent = msgText;
+
+            // Show combo popup for streaks
+            if (state.streak >= 3) showCombo(state.streak);
+
+        } else {
+            state.streak = 0;
+            if (state.gameMode === 'survival') state.lives--;
+
+            playSound('wrong');
+
+            msg.className = 'message wrong-msg';
+            let msgText = `Yanlis! Dogru cevap: ${state.currentPokemon.name}`;
+            if (state.gameMode === 'survival' && state.lives <= 0)
+                msgText += ' | Son canini kaybettin!';
+            msg.textContent = msgText;
+        }
+
+        state.roundResults.push({ name: state.currentPokemon.name, correct: isCorrect });
+        revealPokemon(isCorrect);
+    };
+
+    function showCombo(streak) {
+        const ga = document.querySelector('.game-area');
+        if (!ga) return;
+        const div = document.createElement('div');
+        div.className = 'combo-popup';
+        div.style.color = streak >= 5 ? '#ff6b6b' : '#feca57';
+        div.textContent = `${streak}x KOMBO!`;
+        ga.appendChild(div);
+        setTimeout(() => div.remove(), 1200);
+    }
+
+    // ============ REVEAL ============
+    async function revealPokemon(correct) {
+        const img = document.getElementById('pokemonImg');
+        if (img) img.className = 'revealed';
+
+        // Add to pokedex regardless
+        persist.pokedex.add(state.currentPokemon.id);
+        savePersistent();
+
+        // Show types
+        const hintArea = document.getElementById('hintArea');
+        const types = state.currentPokemon.data.types.map(t => t.type.name);
+        const typeHtml = types.map(t =>
+            `<span class="type-badge type-${t}">${TYPE_NAMES_TR[t] || t}</span>`
+        ).join(' ');
+        if (hintArea) hintArea.innerHTML += `<div style="margin-top:8px">${typeHtml}</div>`;
+
+        // Fetch and show evolution chain
+        loadEvoChain();
+
+        // Update controls
+        const controls = document.querySelector('.controls');
+        if (controls) {
+            if (state.gameMode === 'survival' && state.lives <= 0) {
+                controls.innerHTML = `<button class="ctrl-btn btn-next" onclick="endGame()">Sonuclari Gor</button>`;
             } else {
-                state.streak = 0;
-                msg.className = 'message wrong-msg';
-                msg.textContent = `Yanlis! Dogru cevap: ${state.currentPokemon.name}`;
-            }
-
-            revealPokemon(name, isCorrect);
-        };
-
-        function revealPokemon(guess, correct) {
-            const img = document.getElementById('pokemonImg');
-            if (img) {
-                img.className = 'revealed';
-            }
-
-            // Show types
-            const hintArea = document.getElementById('hintArea');
-            const types = state.currentPokemon.data.types.map(t => t.type.name);
-            const typeHtml = types.map(t =>
-                `<span class="type-badge type-${t}">${TYPE_NAMES_TR[t] || t}</span>`
-            ).join(' ');
-
-            if (hintArea) {
-                hintArea.innerHTML += `<div style="margin-top:10px">${typeHtml}</div>`;
-            }
-
-            // Re-render controls
-            const controls = document.querySelector('.controls');
-            if (controls) {
                 controls.innerHTML = `<button class="ctrl-btn btn-next" onclick="nextRound()">Sonraki &rarr;</button>`;
             }
         }
+    }
 
-        window.getHint = function() {
-            if (state.hints.length >= 3 || state.answered) return;
+    // ============ EVOLUTION CHAIN ============
+    async function loadEvoChain() {
+        try {
+            const species = state.currentPokemon.species;
+            const evoRes = await fetch(species.evolution_chain.url);
+            const evoData = await evoRes.json();
 
-            const pokemon = state.currentPokemon;
-            const data = pokemon.data;
-            const species = pokemon.species;
-
-            const allHints = [];
-
-            // Type hints
-            const types = data.types.map(t => TYPE_NAMES_TR[t.type.name] || t.type.name);
-            allHints.push(`Tip: ${types.join(', ')}`);
-
-            // Stat hint
-            const stats = data.stats;
-            const highest = stats.reduce((a, b) => a.base_stat > b.base_stat ? a : b);
-            const statNames = {
-                hp: 'HP', attack: 'Saldiri', defense: 'Savunma',
-                'special-attack': 'Ozel Saldiri', 'special-defense': 'Ozel Savunma', speed: 'Hiz'
-            };
-            allHints.push(`En yuksek stat: ${statNames[highest.stat.name] || highest.stat.name} (${highest.base_stat})`);
-
-            // Weight/height
-            allHints.push(`Boy: ${data.height / 10}m | Kilo: ${data.weight / 10}kg`);
-
-            // Generation
-            const genMatch = species.generation?.name?.match(/generation-(.+)/);
-            if (genMatch) {
-                const genNum = genMatch[1].toUpperCase();
-                allHints.push(`Nesil: ${genNum}`);
+            const chain = [];
+            let current = evoData.chain;
+            while (current) {
+                const name = current.species.name;
+                const idMatch = current.species.url.match(/\/(\d+)\//);
+                const id = idMatch ? idMatch[1] : 1;
+                chain.push({ name, id });
+                current = current.evolves_to?.[0] || null;
             }
 
-            // Ability hint
-            if (data.abilities.length > 0) {
-                const ability = data.abilities[0].ability.name.replace('-', ' ');
-                allHints.push(`Yetenek: ${ability}`);
-            }
+            if (chain.length <= 1) return;
 
-            // Pick next unused hint
-            const unusedHints = allHints.filter(h => !state.hints.includes(h));
-            if (unusedHints.length > 0) {
-                state.hints.push(unusedHints[0]);
-            }
+            const evoDiv = document.getElementById('evoChain');
+            if (!evoDiv) return;
 
-            // If difficulty is hard and we're showing silhouette, make it partial after first hint
-            if (state.difficulty === 'hard' && state.hints.length >= 2) {
-                const img = document.getElementById('pokemonImg');
-                if (img && img.classList.contains('silhouette')) {
-                    img.className = 'partial';
-                }
-            }
-
-            renderRound();
-        };
-
-        function renderGameOver() {
-            clearInterval(state.timerInterval);
-            const maxPossible = TOTAL_ROUNDS * 50;
-            const pct = Math.round((state.score / maxPossible) * 100);
-
-            let message = '';
-            if (pct >= 80) message = 'Pokemon Ustasi!';
-            else if (pct >= 60) message = 'Harika oyun!';
-            else if (pct >= 40) message = 'Iyi deneme!';
-            else message = 'Daha fazla pratik yap!';
-
-            app.innerHTML = `
-                <div class="game-area game-over">
-                    <h2>Oyun Bitti!</h2>
-                    <div class="final-score">${state.score}</div>
-                    <p style="font-size:1.2rem; margin:10px 0;">${message}</p>
-                    <div style="margin:15px 0; color:rgba(255,255,255,0.7);">
-                        <p>En iyi seri: ${state.bestStreak}</p>
-                        <p>Kullanilan ipucu: ${state.hintsUsed + state.hints.length}</p>
-                        <p>Zorluk: ${{ easy: 'Kolay', medium: 'Orta', hard: 'Zor' }[state.difficulty]}</p>
+            let html = '<div class="evo-chain">';
+            chain.forEach((evo, i) => {
+                if (i > 0) html += '<span class="evo-arrow">→</span>';
+                const isCurrent = evo.name === state.currentPokemon.name;
+                html += `
+                    <div class="evo-item ${isCurrent ? 'current' : ''}">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${evo.id}.png" alt="${evo.name}">
+                        <span>${evo.name}</span>
                     </div>
-                    <div class="controls">
-                        <button class="ctrl-btn btn-start" onclick="startGame()">Tekrar Oyna</button>
-                        <button class="ctrl-btn btn-next" onclick="renderMenu()">Ana Menu</button>
-                    </div>
-                </div>
-            `;
+                `;
+            });
+            html += '</div>';
+            evoDiv.innerHTML = html;
+        } catch(e) {}
+    }
+
+    // ============ HINTS ============
+    window.getHint = function() {
+        if (state.hints.length >= 3 || state.answered) return;
+        playSound('hint');
+
+        const data = state.currentPokemon.data;
+        const species = state.currentPokemon.species;
+
+        const allHints = [];
+
+        // Type
+        const types = data.types.map(t => TYPE_NAMES_TR[t.type.name] || t.type.name);
+        allHints.push(`Tip: ${types.join(', ')}`);
+
+        // Highest stat
+        const highest = data.stats.reduce((a, b) => a.base_stat > b.base_stat ? a : b);
+        allHints.push(`En yuksek stat: ${STAT_NAMES_TR[highest.stat.name] || highest.stat.name} (${highest.base_stat})`);
+
+        // Size
+        allHints.push(`Boy: ${data.height / 10}m | Kilo: ${data.weight / 10}kg`);
+
+        // Generation
+        const genMatch = species.generation?.name?.match(/generation-(.+)/);
+        if (genMatch) allHints.push(`Nesil: ${genMatch[1].toUpperCase()}`);
+
+        // Ability
+        if (data.abilities.length > 0)
+            allHints.push(`Yetenek: ${data.abilities[0].ability.name.replace(/-/g, ' ')}`);
+
+        // First letter
+        allHints.push(`Ilk harf: ${state.currentPokemon.name[0].toUpperCase()}`);
+
+        const unused = allHints.filter(h => !state.hints.includes(h));
+        if (unused.length > 0) state.hints.push(unused[0]);
+
+        state.totalHintsUsed++;
+
+        if (state.difficulty === 'hard' && state.hints.length >= 2) {
+            const img = document.getElementById('pokemonImg');
+            if (img && img.classList.contains('silhouette')) img.className = 'partial';
         }
 
-        window.renderMenu = renderMenu;
+        renderRound();
+    };
 
-        // Start
-        renderMenu();
+    // ============ END GAME ============
+    window.endGame = function() {
+        clearInterval(state.timerInterval);
+        playSound('gameover');
+
+        persist.gamesPlayed++;
+        const entry = {
+            score: state.score,
+            mode: state.gameMode,
+            difficulty: state.difficulty,
+            streak: state.bestStreak,
+            rounds: state.round - (state.gameMode !== 'survival' ? 1 : 0),
+            date: new Date().toLocaleDateString('tr-TR')
+        };
+        persist.leaderboard.push(entry);
+        persist.leaderboard.sort((a, b) => b.score - a.score);
+        persist.leaderboard = persist.leaderboard.slice(0, 20);
+        savePersistent();
+
+        const maxPossible = TOTAL_ROUNDS * 50;
+        const pct = Math.round((state.score / maxPossible) * 100);
+
+        let title = '';
+        if (pct >= 80) title = 'Pokemon Ustasi!';
+        else if (pct >= 60) title = 'Harika oyun!';
+        else if (pct >= 40) title = 'Iyi deneme!';
+        else title = 'Daha fazla pratik yap!';
+
+        const modeLabel = { classic: 'Klasik', survival: 'Hayatta Kal', speedrun: 'Hiz Turu' }[state.gameMode];
+        const diffLabel = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' }[state.difficulty];
+
+        // Round results summary
+        let resultsHtml = '<div style="display:flex; justify-content:center; gap:4px; flex-wrap:wrap; margin:10px 0;">';
+        state.roundResults.forEach(r => {
+            resultsHtml += `<span style="font-size:0.75rem; padding:3px 8px; border-radius:8px; background:${r.correct ? 'rgba(72,219,251,0.2)' : 'rgba(255,107,107,0.2)'}; text-transform:capitalize;">${r.correct ? '✓' : '✗'} ${r.name}</span>`;
+        });
+        resultsHtml += '</div>';
+
+        app.innerHTML = `
+            <div class="game-area game-over">
+                <h2>Oyun Bitti!</h2>
+                <div class="final-score">${state.score}</div>
+                <p style="font-size:1.2rem; margin:8px 0;">${title}</p>
+                <div style="margin:10px 0; color:rgba(255,255,255,0.7); font-size:0.9rem;">
+                    <p>${modeLabel} | ${diffLabel}</p>
+                    <p>En iyi seri: ${state.bestStreak} | Ipucu: ${state.totalHintsUsed}</p>
+                    <p>Pokedex: ${persist.pokedex.size}/${POKEMON_POOL.length}</p>
+                </div>
+                ${resultsHtml}
+                <div class="xp-bar-container">
+                    <div class="trainer-badge">Trainer Lv.${getTrainerLevel()}</div>
+                    <div class="xp-bar"><div class="xp-fill" style="width:${getXPProgress()}%"></div></div>
+                    <div class="xp-label">${getXPProgress()} / ${XP_PER_LEVEL} XP</div>
+                </div>
+                <div class="controls" style="margin-top:15px;">
+                    <button class="ctrl-btn btn-start" onclick="startGame()">Tekrar Oyna</button>
+                    <button class="ctrl-btn btn-next" onclick="navigate('game')">Ana Menu</button>
+                </div>
+            </div>
+        `;
+
+        if (state.score > 0) spawnConfetti(30);
+    };
+
+    // ============ POKEDEX ============
+    function renderPokedex() {
+        clearInterval(state.timerInterval);
+        const caught = persist.pokedex.size;
+        const total = POKEMON_POOL.length;
+        const pct = Math.round((caught / total) * 100);
+
+        let html = `
+            <div class="game-area">
+                <h2 style="margin-bottom:10px;">Pokedex</h2>
+                <div class="pokedex-stats">
+                    <span>Yakalanan: ${caught}/${total}</span>
+                    <span>Tamamlanma: %${pct}</span>
+                </div>
+                <div class="xp-bar" style="max-width:300px; margin:8px auto;">
+                    <div class="xp-fill" style="width:${pct}%; background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);"></div>
+                </div>
+                <div class="pokedex-grid">
+        `;
+
+        POKEMON_POOL.forEach(p => {
+            const known = persist.pokedex.has(p.id);
+            html += `
+                <div class="pokedex-entry ${known ? '' : 'unknown'}">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png" alt="${p.name}">
+                    <span>#${p.id} ${known ? p.name : '???'}</span>
+                </div>
+            `;
+        });
+
+        html += `</div>
+            ${caught > 0 ? `<button class="ctrl-btn" style="background:rgba(255,107,107,0.3); color:#ff6b6b; margin-top:10px; font-size:0.8rem;" onclick="resetPokedex()">Pokedex'i Sifirla</button>` : ''}
+            </div>`;
+
+        app.innerHTML = html;
+    }
+
+    window.resetPokedex = function() {
+        if (confirm('Pokedex sifirlansin mi?')) {
+            persist.pokedex = new Set();
+            savePersistent();
+            renderPokedex();
+        }
+    };
+
+    // ============ LEADERBOARD ============
+    function renderLeaderboard() {
+        clearInterval(state.timerInterval);
+        const lb = persist.leaderboard;
+        const modeLabels = { classic: 'Klasik', survival: 'Hayatta Kal', speedrun: 'Hiz Turu' };
+        const diffLabels = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
+
+        let html = `<div class="game-area"><h2 style="margin-bottom:15px;">Skor Tablosu</h2>`;
+
+        if (lb.length === 0) {
+            html += `<p style="color:rgba(255,255,255,0.5);">Henuz skor yok. Bir oyun oyna!</p>`;
+        } else {
+            html += `<div class="leaderboard">`;
+            lb.forEach((e, i) => {
+                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+                html += `
+                    <div class="lb-entry">
+                        <span class="lb-rank">${medal || (i + 1)}</span>
+                        <span class="lb-info">
+                            <span class="lb-score">${e.score} puan</span>
+                            <span class="lb-mode">${modeLabels[e.mode] || e.mode} | ${diffLabels[e.difficulty] || e.difficulty} | Seri: ${e.streak} | ${e.date}</span>
+                        </span>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            html += `<button class="ctrl-btn" style="background:rgba(255,107,107,0.3); color:#ff6b6b; margin-top:10px; font-size:0.8rem;" onclick="resetLeaderboard()">Tabloyu Sifirla</button>`;
+        }
+
+        html += `</div>`;
+        app.innerHTML = html;
+    }
+
+    window.resetLeaderboard = function() {
+        if (confirm('Skor tablosu silinsin mi?')) {
+            persist.leaderboard = [];
+            savePersistent();
+            renderLeaderboard();
+        }
+    };
+
+    // ============ INIT ============
+    renderMenu();
     </script>
 </body>
 </html>
