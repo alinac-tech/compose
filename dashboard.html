@@ -88,18 +88,58 @@ backface-visibility: hidden;
 .reveal.d5 { animation-delay: 3.0s; }
 @keyframes revealIn { to { opacity: 1; transform: translateY(0); } }
 
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.header-left h1 {
-font-size: 32px; font-weight: 700; letter-spacing: -0.8px;
-background: linear-gradient(135deg, #f5f5f7 0%, #a1a1a6 100%);
+/* ---- Hero Greeting (Apple Weather style) ---- */
+.hero-greeting {
+position: relative;
+padding: 36px 32px 28px;
+border-radius: 20px;
+margin-bottom: 20px;
+overflow: hidden;
+background: linear-gradient(135deg, rgba(10,132,255,0.12) 0%, rgba(191,90,242,0.08) 50%, rgba(48,209,88,0.06) 100%);
+border: 1px solid rgba(255,255,255,0.06);
+}
+.hero-greeting::before {
+content: '';
+position: absolute; inset: 0;
+background: radial-gradient(ellipse at 70% 20%, rgba(10,132,255,0.15), transparent 60%),
+            radial-gradient(ellipse at 30% 80%, rgba(191,90,242,0.08), transparent 50%);
+pointer-events: none;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+.hero-left { flex: 1; }
+.hero-greeting-text {
+font-size: 28px; font-weight: 300; letter-spacing: -0.5px; color: var(--text-2); margin-bottom: 4px;
+}
+.hero-name {
+font-size: 36px; font-weight: 700; letter-spacing: -1px;
+background: linear-gradient(135deg, #f5f5f7 0%, #d1d1d6 100%);
 -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.header-left p { font-size: 13px; color: var(--text-3); margin-top: 4px; }
-.header-right { display: flex; gap: 8px; }
+.hero-subtitle { font-size: 13px; color: var(--text-3); margin-top: 6px; font-weight: 400; }
+.hero-weather {
+position: relative; z-index: 1;
+display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+padding: 12px 16px;
+background: rgba(255,255,255,0.04);
+border-radius: 16px;
+border: 1px solid rgba(255,255,255,0.06);
+min-width: 140px;
+}
+.hero-weather-temp {
+font-size: 44px; font-weight: 200; letter-spacing: -2px; line-height: 1;
+background: linear-gradient(180deg, #f5f5f7, #a1a1a6);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-weather-icon { font-size: 28px; line-height: 1; }
+.hero-weather-desc { font-size: 11px; color: var(--text-2); font-weight: 500; }
+.hero-weather-range { font-size: 10px; color: var(--text-3); font-weight: 500; }
+.hero-weather-loc { font-size: 10px; color: var(--text-3); display: flex; align-items: center; gap: 3px; }
+.hero-weather-loc::before { content: '\25CF'; font-size: 5px; color: var(--accent); }
+.hero-pills { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; position: relative; z-index: 1; }
 .stat-pill {
 display: flex; align-items: center; gap: 7px; padding: 7px 16px;
-background: var(--surface); backdrop-filter: blur(20px);
-border: 1px solid var(--border); border-radius: 100px;
+background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+border: 1px solid rgba(255,255,255,0.08); border-radius: 100px;
 font-size: 12px; font-weight: 500; cursor: default;
 transition: all 0.3s;
 }
@@ -389,12 +429,22 @@ animation: fireRise 0.9s ease-out forwards;
 
 <div class="container">
 
-<div class="header reveal d1">
-  <div class="header-left">
-    <h1>Daily Briefing</h1>
-    <p>Ozdemir MD &middot; Cardiovascular Surgery &middot; Izmir Bayrakli City Hospital &middot; March 7, 2026, Saturday</p>
+<div class="hero-greeting reveal d1" id="heroGreeting">
+  <div class="hero-top">
+    <div class="hero-left">
+      <div class="hero-greeting-text" id="greetText">Good Morning,</div>
+      <div class="hero-name">Dr. Ozdemir</div>
+      <div class="hero-subtitle">Cardiovascular Surgery &middot; Izmir Bayrakli City Hospital</div>
+    </div>
+    <div class="hero-weather" id="heroWeather">
+      <div class="hero-weather-icon" id="wxIcon">&#9925;</div>
+      <div class="hero-weather-temp" id="wxTemp">14&deg;</div>
+      <div class="hero-weather-desc" id="wxDesc">Partly Cloudy</div>
+      <div class="hero-weather-range" id="wxRange">H:17&deg; L:9&deg;</div>
+      <div class="hero-weather-loc">Izmir, TR</div>
+    </div>
   </div>
-  <div class="header-right">
+  <div class="hero-pills">
     <div class="stat-pill"><span class="pill-dot" style="background:var(--orange)"></span>8 Tasks</div>
     <div class="stat-pill"><span class="pill-dot" style="background:var(--accent)"></span>6 Ethics</div>
     <div class="stat-pill"><span class="pill-dot" style="background:var(--red)"></span>On-Call TOMORROW</div>
@@ -976,6 +1026,43 @@ document.querySelector('.daily-quote .q-author').textContent = q.author;
 setTimeout(() => {
   document.querySelectorAll('.progress-fill[data-width]').forEach(bar => { bar.style.width = bar.dataset.width; });
 }, 2800);
+
+// ---- Time-based greeting ----
+(function updateGreeting() {
+  const h = new Date().getHours();
+  let greet = 'Good Evening,';
+  if (h >= 5 && h < 12) greet = 'Good Morning,';
+  else if (h >= 12 && h < 17) greet = 'Good Afternoon,';
+  const el = document.getElementById('greetText');
+  if (el) el.textContent = greet;
+})();
+
+// ---- Weather from Open-Meteo (free, no API key) ----
+(async function fetchWeather() {
+  try {
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=38.42&longitude=27.14&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FIstanbul&forecast_days=1');
+    const d = await res.json();
+    const temp = Math.round(d.current.temperature_2m);
+    const hi = Math.round(d.daily.temperature_2m_max[0]);
+    const lo = Math.round(d.daily.temperature_2m_min[0]);
+    const wmo = d.current.weather_code;
+    // WMO weather code to icon + description
+    const wxMap = {
+      0:['☀️','Clear'],1:['🌤','Mostly Clear'],2:['⛅','Partly Cloudy'],3:['☁️','Overcast'],
+      45:['🌫','Fog'],48:['🌫','Rime Fog'],
+      51:['🌦','Light Drizzle'],53:['🌦','Drizzle'],55:['🌧','Heavy Drizzle'],
+      61:['🌧','Light Rain'],63:['🌧','Rain'],65:['🌧','Heavy Rain'],
+      71:['🌨','Light Snow'],73:['🌨','Snow'],75:['❄️','Heavy Snow'],
+      80:['🌦','Showers'],81:['🌧','Mod. Showers'],82:['⛈','Heavy Showers'],
+      95:['⛈','Thunderstorm'],96:['⛈','T-Storm w/ Hail'],99:['⛈','Severe T-Storm']
+    };
+    const wx = wxMap[wmo] || ['🌡','N/A'];
+    document.getElementById('wxIcon').textContent = wx[0];
+    document.getElementById('wxTemp').innerHTML = temp + '&deg;';
+    document.getElementById('wxDesc').textContent = wx[1];
+    document.getElementById('wxRange').innerHTML = 'H:' + hi + '&deg; L:' + lo + '&deg;';
+  } catch(e) { /* fallback: keep static values */ }
+})();
 </script>
 
 </body>
