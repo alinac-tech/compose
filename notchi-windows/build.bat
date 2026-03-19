@@ -97,27 +97,25 @@ echo.
 echo [2/4] Uygulama ikonu olusturuluyor...
 python generate_icon.py 2>&1
 
-:: ── Build exe ────────────────────────────────
+:: ── Build exe (GUI + debug) ──────────────────
 echo.
 echo [3/4] Notchi.exe derleniyor (1-2 dakika surebilir)...
+
+set PYINSTALLER_ARGS=--onefile --hidden-import=pystray._win32 --hidden-import=PIL.ImageTk --exclude-module=pystray._xorg --exclude-module=pystray._gtk --exclude-module=pystray._darwin --exclude-module=pystray._appindicator
+
+:: Build GUI version (no console)
 if exist notchi_icon.ico (
-    python -m PyInstaller --onefile --noconsole --name Notchi --icon=notchi_icon.ico ^
-        --hidden-import=pystray._win32 ^
-        --hidden-import=PIL.ImageTk ^
-        --exclude-module=pystray._xorg ^
-        --exclude-module=pystray._gtk ^
-        --exclude-module=pystray._darwin ^
-        --exclude-module=pystray._appindicator ^
-        main.py
+    python -m PyInstaller %PYINSTALLER_ARGS% --noconsole --name Notchi --icon=notchi_icon.ico main.py
 ) else (
-    python -m PyInstaller --onefile --noconsole --name Notchi ^
-        --hidden-import=pystray._win32 ^
-        --hidden-import=PIL.ImageTk ^
-        --exclude-module=pystray._xorg ^
-        --exclude-module=pystray._gtk ^
-        --exclude-module=pystray._darwin ^
-        --exclude-module=pystray._appindicator ^
-        main.py
+    python -m PyInstaller %PYINSTALLER_ARGS% --noconsole --name Notchi main.py
+)
+
+:: Also build debug version (with console for troubleshooting)
+echo [3b/4] Debug versiyonu derleniyor...
+if exist notchi_icon.ico (
+    python -m PyInstaller %PYINSTALLER_ARGS% --console --name NotchiDebug --icon=notchi_icon.ico main.py
+) else (
+    python -m PyInstaller %PYINSTALLER_ARGS% --console --name NotchiDebug main.py
 )
 
 if %errorlevel% neq 0 (
@@ -129,6 +127,7 @@ if %errorlevel% neq 0 (
 
 :: ── Done ─────────────────────────────────────
 copy dist\Notchi.exe Notchi.exe >nul 2>&1
+copy dist\NotchiDebug.exe NotchiDebug.exe >nul 2>&1
 
 echo.
 echo ============================================
@@ -139,6 +138,9 @@ echo   Konum: dist\Notchi.exe
 echo.
 echo   Calistirmak icin:
 echo     Notchi.exe
+echo.
+echo   Hata ayiklama icin (konsol penceresi ile):
+echo     NotchiDebug.exe
 echo.
 echo   Duygu analizi ile:
 echo     Notchi.exe --api-key ANTHROPIC_API_KEY

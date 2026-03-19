@@ -3,8 +3,9 @@
 import math
 import time
 import threading
+import logging
+import sys
 import tkinter as tk
-from tkinter import messagebox
 from typing import Optional, Callable
 
 from PIL import Image, ImageTk
@@ -13,20 +14,42 @@ from .models import NotchiTask, NotchiEmotion, NotchiState, SessionData
 from .sprites import generate_sprite_frame, generate_grass_tile, generate_tray_icon, SPRITE_SIZE
 from .services import SessionStore
 
+logger = logging.getLogger("notchi")
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 
-OVERLAY_HEIGHT = 80
-SPRITE_DISPLAY_SIZE = 48  # Display size (upscaled from 32)
+OVERLAY_HEIGHT = 100
+SPRITE_DISPLAY_SIZE = 48
 GRASS_HEIGHT = 40
-ANIMATION_INTERVAL_MS = 150  # ~6.6 FPS
-STATUS_BAR_HEIGHT = 24
+ANIMATION_INTERVAL_MS = 150
+STATUS_BAR_HEIGHT = 28
 BG_COLOR = "#1A1A2E"
-GRASS_BG = "#2D5A27"
 STATUS_BG = "#0F0F1F"
 TEXT_COLOR = "#E0E0E0"
 ACCENT_COLOR = "#5B8DEF"
 DIM_COLOR = "#888888"
+
+# Task icons (ASCII-safe, no emoji - Consolas doesn't support them)
+TASK_ICONS = {
+    NotchiTask.IDLE: "[~]",
+    NotchiTask.WORKING: "[*]",
+    NotchiTask.SLEEPING: "[z]",
+    NotchiTask.COMPACTING: "[>]",
+    NotchiTask.WAITING: "[?]",
+}
+
+
+def _enable_dpi_awareness():
+    """Enable high-DPI awareness on Windows."""
+    try:
+        import ctypes
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    except Exception:
+        try:
+            import ctypes
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
 
 
 class NotchiOverlay:
@@ -42,51 +65,78 @@ class NotchiOverlay:
         self._expanded = False
         self._running = True
 
+        # Enable DPI awareness before creating any windows
+        _enable_dpi_awareness()
+
         # Create root window
         self.root = tk.Tk()
         self.root.title("Notchi")
-        self.root.overrideredirect(True)  # Frameless
-        self.root.attributes("-topmost", True)  # Always on top
-        self.root.attributes("-alpha", 0.95)  # Slight transparency
         self.root.configure(bg=BG_COLOR)
 
-        # Position at top-center of screen
-        screen_w = self.root.winfo_screenwidth()
-        self._overlay_width = min(400, screen_w // 3)
-        x = (screen_w - self._overlay_width) // 2
-        y = 0
-        self._collapsed_height = OVERLAY_HEIGHT
-        self._expanded_height = OVERLAY_HEIGHT + 160
-        self.root.geometry(f"{self._overlay_width}x{self._collapsed_height}+{x}+{y}")
+        # Set window properties step by step
+        self.root.overrideredirect(True)
+        self.root.attributes("-topmost", True)
 
-        # Make window click-through for transparent areas (Windows-specific)
+        # Alpha transparency (skip if not supported)
         try:
-            self.root.wm_attributes("-transparentcolor", "")
+            self.root.attributes("-alpha", 0.95)
         except tk.TclError:
             pass
 
+        # Calculate dimensions
+        screen_w = self.root.winfo_screenwidth()
+        screen_h = self.root.winfo_screenheight()
+        self._overlay_width = max(300, min(420, screen_w // 3))
+        self._collapsed_height = OVERLAY_HEIGHT + STATUS_BAR_HEIGHT
+        self._expanded_height = self._collapsed_height + 160
+
+        # Position at top-center
+        x = (screen_w - self._overlay_width) // 2
+        y = 5  # Small offset from top edge
+        self.root.geometry(f"{self._overlay_width}x{self._collapsed_height}+{x}+{y}")
+
+        # Force window to update so it's visible
+        self.root.update_idletasks()
+
+        logger.info(f"Window: {self._overlay_width}x{self._collapsed_height} at +{x}+{y} (screen: {screen_w}x{screen_h})")
+
         self._build_ui()
         self._bind_events()
-        self._start_animation()
+
+        # Start animation after a short delay to let window initialize
+        self.root.after(200, self._start_animation)
 
     def _build_ui(self):
         """Build the overlay UI."""
         # Main canvas for sprites
+        canvas_height = OVERLAY_HEIGHT
         self.canvas = tk.Canvas(
             self.root,
             width=self._overlay_width,
-            height=OVERLAY_HEIGHT,
+            height=canvas_height,
             bg=BG_COLOR,
             highlightthickness=0,
             bd=0,
         )
-        self.canvas.pack(fill=tk.X)
+        self.canvas.pack(fill=tk.X, expand=False)
 
-        # Generate grass background
-        grass = generate_grass_tile(self._overlay_width, GRASS_HEIGHT)
-        self._grass_photo = ImageTk.PhotoImage(grass.resize(
-            (self._overlay_width, GRASS_HEIGHT), Image.NEAREST
-        ))
+        # Pre-generate grass background
+        try:
+            grass = generate_grass_tile(self._overlay_width, GRASS_HEIGHT)
+            self._grass_photo = ImageTk.PhotoImage(grass.resize(
+                (self._overlay_width, GRASS_HEIGHT), Image.NEAREST
+            ))
+            logger.info("Grass tile generated OK")
+        except Exception as e:
+            logger.error(f"Failed to generate grass: {e}")
+            self._grass_photo = None
+
+        # Pre-generate idle sprite so something shows immediately
+        try:
+            self._ensure_sprite_cached("idle", "neutral", 6)
+            logger.info("Initial sprite cached OK")
+        except Exception as e:
+            logger.error(f"Failed to cache initial sprite: {e}")
 
         # Status bar at bottom
         self.status_frame = tk.Frame(self.root, bg=STATUS_BG, height=STATUS_BAR_HEIGHT)
@@ -95,10 +145,10 @@ class NotchiOverlay:
 
         self.status_label = tk.Label(
             self.status_frame,
-            text="Notchi - No active sessions",
+            text="Notchi - Aktif oturum yok",
             bg=STATUS_BG,
             fg=DIM_COLOR,
-            font=("Consolas", 8),
+            font=("Consolas", 9),
             anchor="w",
             padx=8,
         )
@@ -109,17 +159,17 @@ class NotchiOverlay:
         btn_frame.pack(side=tk.RIGHT, padx=4)
 
         self.expand_btn = tk.Label(
-            btn_frame, text="▼", bg=STATUS_BG, fg=DIM_COLOR,
-            font=("Consolas", 8), cursor="hand2",
+            btn_frame, text="v", bg=STATUS_BG, fg=DIM_COLOR,
+            font=("Consolas", 9, "bold"), cursor="hand2",
         )
-        self.expand_btn.pack(side=tk.LEFT, padx=2)
+        self.expand_btn.pack(side=tk.LEFT, padx=4)
         self.expand_btn.bind("<Button-1>", self._toggle_expand)
 
         self.close_btn = tk.Label(
-            btn_frame, text="✕", bg=STATUS_BG, fg="#FF6B6B",
-            font=("Consolas", 8), cursor="hand2",
+            btn_frame, text="X", bg=STATUS_BG, fg="#FF6B6B",
+            font=("Consolas", 9, "bold"), cursor="hand2",
         )
-        self.close_btn.pack(side=tk.LEFT, padx=2)
+        self.close_btn.pack(side=tk.LEFT, padx=4)
         self.close_btn.bind("<Button-1>", self._on_close)
 
         # Expanded panel (initially hidden)
@@ -139,6 +189,21 @@ class NotchiOverlay:
         )
         self.detail_text.pack(fill=tk.BOTH, expand=True)
 
+        # Draw initial frame immediately
+        self.root.update_idletasks()
+
+    def _ensure_sprite_cached(self, task_name: str, emotion_name: str, frame_count: int):
+        """Pre-generate and cache sprite frames."""
+        cache_key = f"{task_name}_{emotion_name}"
+        if cache_key in self._sprite_cache:
+            return
+        frames = []
+        for i in range(frame_count):
+            img = generate_sprite_frame(task_name, emotion_name, i)
+            img = img.resize((SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE), Image.NEAREST)
+            frames.append(ImageTk.PhotoImage(img))
+        self._sprite_cache[cache_key] = frames
+
     def _bind_events(self):
         """Bind drag and interaction events."""
         self.canvas.bind("<ButtonPress-1>", self._on_drag_start)
@@ -147,10 +212,10 @@ class NotchiOverlay:
 
         # Right-click context menu
         self.context_menu = tk.Menu(self.root, tearoff=0)
-        self.context_menu.add_command(label="Toggle Details", command=lambda: self._toggle_expand(None))
+        self.context_menu.add_command(label="Detaylari Goster/Gizle", command=lambda: self._toggle_expand(None))
         self.context_menu.add_separator()
-        self.context_menu.add_command(label="Minimize to Tray", command=self._minimize_to_tray)
-        self.context_menu.add_command(label="Quit Notchi", command=self._on_close)
+        self.context_menu.add_command(label="Tray'e Kucult", command=self._minimize_to_tray)
+        self.context_menu.add_command(label="Kapat", command=self._on_close)
         self.canvas.bind("<Button-3>", self._show_context_menu)
 
     def _on_drag_start(self, event):
@@ -163,18 +228,21 @@ class NotchiOverlay:
         self.root.geometry(f"+{x}+{y}")
 
     def _show_context_menu(self, event):
-        self.context_menu.tk_popup(event.x_root, event.y_root)
+        try:
+            self.context_menu.tk_popup(event.x_root, event.y_root)
+        except tk.TclError:
+            pass
 
     def _toggle_expand(self, event):
         self._expanded = not self._expanded
         if self._expanded:
             self.detail_frame.pack(fill=tk.BOTH, expand=True, before=self.status_frame)
             h = self._expanded_height
-            self.expand_btn.config(text="▲")
+            self.expand_btn.config(text="^")
         else:
             self.detail_frame.pack_forget()
             h = self._collapsed_height
-            self.expand_btn.config(text="▼")
+            self.expand_btn.config(text="v")
 
         x = self.root.winfo_x()
         y = self.root.winfo_y()
@@ -186,10 +254,14 @@ class NotchiOverlay:
     def show(self):
         """Show the overlay window."""
         self.root.deiconify()
+        self.root.lift()
 
     def _on_close(self, event=None):
         self._running = False
-        self.root.destroy()
+        try:
+            self.root.destroy()
+        except tk.TclError:
+            pass
         if self.on_quit:
             self.on_quit()
 
@@ -197,6 +269,7 @@ class NotchiOverlay:
 
     def _start_animation(self):
         """Start the animation update loop."""
+        logger.info("Starting animation loop")
         self._update_frame()
 
     def _update_frame(self):
@@ -210,9 +283,15 @@ class NotchiOverlay:
                 self._update_details()
             self._frame_counter += 1
         except tk.TclError:
+            # Window was destroyed
             return
+        except Exception as e:
+            logger.error(f"Animation error: {e}", exc_info=True)
 
-        self.root.after(ANIMATION_INTERVAL_MS, self._update_frame)
+        try:
+            self.root.after(ANIMATION_INTERVAL_MS, self._update_frame)
+        except tk.TclError:
+            pass
 
     def _render_canvas(self):
         """Render sprites and grass on the canvas."""
@@ -239,12 +318,13 @@ class NotchiOverlay:
             self._draw_sprite(
                 NotchiState(NotchiTask.IDLE, NotchiEmotion.NEUTRAL),
                 self._overlay_width // 2,
-                grass_y - 5,
+                grass_y - 2,
             )
         else:
             for session in sessions:
                 x = int(session.sprite_x_position * self._overlay_width)
-                y = grass_y + int(session.sprite_y_offset / 3) - 5
+                x = max(SPRITE_DISPLAY_SIZE // 2, min(x, self._overlay_width - SPRITE_DISPLAY_SIZE // 2))
+                y = grass_y + int(session.sprite_y_offset / 3) - 2
                 self._draw_sprite(session.state, x, y)
 
     def _draw_sprite(self, state: NotchiState, x: int, y: int):
@@ -255,22 +335,17 @@ class NotchiOverlay:
 
         # Generate frames if not cached
         if cache_key not in self._sprite_cache:
-            frames = []
-            for i in range(state.frame_count):
-                img = generate_sprite_frame(task_name, emotion_name, i)
-                # Upscale for display
-                img = img.resize(
-                    (SPRITE_DISPLAY_SIZE, SPRITE_DISPLAY_SIZE),
-                    Image.NEAREST,
-                )
-                frames.append(ImageTk.PhotoImage(img))
-            self._sprite_cache[cache_key] = frames
+            try:
+                self._ensure_sprite_cached(task_name, emotion_name, state.frame_count)
+            except Exception as e:
+                logger.error(f"Failed to generate sprite {cache_key}: {e}")
+                return
 
-        frames = self._sprite_cache[cache_key]
+        frames = self._sprite_cache.get(cache_key, [])
         if not frames:
             return
 
-        # Select frame based on FPS
+        # Select frame
         frame_idx = self._frame_counter % len(frames)
         photo = frames[frame_idx]
 
@@ -278,7 +353,7 @@ class NotchiOverlay:
         bob_y = 0
         if state.bob_amplitude > 0:
             t = time.time()
-            period = state.bob_duration if state.bob_duration > 0 else 1.0
+            period = max(state.bob_duration, 0.1)
             phase = (t % period) / period
             bob_y = int(state.bob_amplitude * math.sin(phase * 2 * math.pi))
 
@@ -288,21 +363,15 @@ class NotchiOverlay:
         """Update the status bar text."""
         sessions = self.session_store.sorted_sessions
         if not sessions:
-            self.status_label.config(text="Notchi - No active sessions", fg=DIM_COLOR)
+            self.status_label.config(text="Notchi - Aktif oturum yok", fg=DIM_COLOR)
             return
 
         effective = self.session_store.effective_session
         if effective:
-            task_icon = {
-                NotchiTask.IDLE: "💤",
-                NotchiTask.WORKING: "⚡",
-                NotchiTask.SLEEPING: "😴",
-                NotchiTask.COMPACTING: "📦",
-                NotchiTask.WAITING: "⏳",
-            }.get(effective.task, "")
-            text = f"{task_icon} {effective.display_title} [{effective.formatted_duration}]"
+            icon = TASK_ICONS.get(effective.task, "")
+            text = f"{icon} {effective.display_title} [{effective.formatted_duration}]"
             if len(sessions) > 1:
-                text += f"  ({len(sessions)} sessions)"
+                text += f"  ({len(sessions)} oturum)"
             self.status_label.config(text=text, fg=TEXT_COLOR)
 
     def _update_details(self):
@@ -312,23 +381,24 @@ class NotchiOverlay:
 
         sessions = self.session_store.sorted_sessions
         if not sessions:
-            self.detail_text.insert(tk.END, "No active sessions.\n\n")
-            self.detail_text.insert(tk.END, "Start Claude Code to see activity here.\n")
+            self.detail_text.insert(tk.END, "Aktif oturum yok.\n\n")
+            self.detail_text.insert(tk.END, "Claude Code baslattiginizda aktivite burada gorunur.\n")
         else:
             for session in sessions:
-                status = "●" if session.is_processing else "○"
+                status = ">" if session.is_processing else "-"
                 self.detail_text.insert(
                     tk.END,
-                    f"{status} {session.display_title}\n"
-                    f"  State: {session.state.display_name} | "
-                    f"Duration: {session.formatted_duration} | "
-                    f"Mode: {session.permission_mode}\n\n"
+                    f" {status} {session.display_title}\n"
+                    f"   Durum: {session.state.display_name} | "
+                    f"Sure: {session.formatted_duration} | "
+                    f"Mod: {session.permission_mode}\n\n"
                 )
 
         self.detail_text.config(state=tk.DISABLED)
 
     def run(self):
         """Start the tkinter main loop."""
+        logger.info("Entering main loop")
         self.root.mainloop()
 
 
@@ -355,15 +425,18 @@ class TrayIcon:
                 icon_image,
                 "Notchi - Claude Code Companion",
                 menu=pystray.Menu(
-                    Item("Show Notchi", lambda: self.on_show()),
-                    Item("Quit", lambda: self._quit()),
+                    Item("Notchi'yi Goster", lambda: self.on_show()),
+                    Item("Kapat", lambda: self._quit()),
                 ),
             )
 
             thread = threading.Thread(target=self._icon.run, daemon=True)
             thread.start()
+            logger.info("Tray icon started")
         except ImportError:
-            pass  # pystray not installed, skip tray icon
+            logger.warning("pystray not available, skipping tray icon")
+        except Exception as e:
+            logger.warning(f"Tray icon failed: {e}")
 
     def _quit(self):
         if self._icon:
@@ -372,7 +445,10 @@ class TrayIcon:
 
     def stop(self):
         if self._icon:
-            self._icon.stop()
+            try:
+                self._icon.stop()
+            except Exception:
+                pass
 
     def update_icon(self, task: str):
         """Update tray icon based on current task."""
