@@ -16,19 +16,19 @@ if %errorlevel% neq 0 (
 
 :: Install dependencies
 echo [1/4] Installing dependencies...
-pip install -r requirements.txt pyinstaller >nul 2>&1
+python -m pip install -r requirements.txt pyinstaller 2>&1
 if %errorlevel% neq 0 (
     echo [WARN] Some dependencies may have failed. Trying to continue...
 )
 
 :: Generate icon
 echo [2/4] Generating application icon...
-python generate_icon.py >nul 2>&1
+python generate_icon.py 2>&1
 
 :: Build exe
 echo [3/4] Building Notchi.exe (this may take a minute)...
 if exist notchi_icon.ico (
-    pyinstaller --onefile --noconsole --name Notchi --icon=notchi_icon.ico ^
+    python -m PyInstaller --onefile --noconsole --name Notchi --icon=notchi_icon.ico ^
         --hidden-import=pystray._win32 ^
         --hidden-import=PIL.ImageTk ^
         --exclude-module=pystray._xorg ^
@@ -37,7 +37,7 @@ if exist notchi_icon.ico (
         --exclude-module=pystray._appindicator ^
         main.py
 ) else (
-    pyinstaller --onefile --noconsole --name Notchi ^
+    python -m PyInstaller --onefile --noconsole --name Notchi ^
         --hidden-import=pystray._win32 ^
         --hidden-import=PIL.ImageTk ^
         --exclude-module=pystray._xorg ^
