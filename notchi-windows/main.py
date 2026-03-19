@@ -54,6 +54,11 @@ def main():
         default=19019,
         help="TCP port to listen on (default: 19019)",
     )
+    parser.add_argument(
+        "--headless",
+        action="store_true",
+        help="Run without GUI (useful for testing or servers)",
+    )
 
     args = parser.parse_args()
 
@@ -84,7 +89,7 @@ def main():
     # Run the app
     from notchi.app import NotchiApp
 
-    app = NotchiApp(api_key=args.api_key)
+    app = NotchiApp(api_key=args.api_key, headless=args.headless)
     app.run()
 
 

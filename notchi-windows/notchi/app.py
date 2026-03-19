@@ -12,17 +12,28 @@ from .services import (
     EmotionAnalyzer,
     HookInstaller,
 )
-from .ui import NotchiOverlay, TrayIcon
-
 logger = logging.getLogger("notchi")
+
+# Lazy imports for UI (requires tkinter + display)
+NotchiOverlay = None
+TrayIcon = None
+
+
+def _import_ui():
+    global NotchiOverlay, TrayIcon
+    if NotchiOverlay is None:
+        from .ui import NotchiOverlay as _Overlay, TrayIcon as _Tray
+        NotchiOverlay = _Overlay
+        TrayIcon = _Tray
 
 
 class NotchiApp:
     """Main Notchi Windows application."""
 
-    def __init__(self, api_key: str = None):
+    def __init__(self, api_key: str = None, headless: bool = False):
         self.session_store = SessionStore()
         self.emotion_analyzer = EmotionAnalyzer(api_key=api_key)
+        self.headless = headless
 
         # State machine with UI update callback
         self.state_machine = NotchiStateMachine(
@@ -34,8 +45,8 @@ class NotchiApp:
         self.socket_server = SocketServer(on_event=self._handle_event)
 
         # UI components (created later in main thread)
-        self.overlay: NotchiOverlay = None
-        self.tray: TrayIcon = None
+        self.overlay = None
+        self.tray = None
 
     def run(self):
         """Start the application."""
@@ -51,7 +62,24 @@ class NotchiApp:
         # Start socket server
         self.socket_server.start()
 
+        if self.headless:
+            logger.info("Running in headless mode (no GUI). Listening for events...")
+            try:
+                import signal
+                signal.pause()
+            except (AttributeError, KeyboardInterrupt):
+                # signal.pause() not available on Windows; use event loop
+                import time
+                try:
+                    while True:
+                        time.sleep(1)
+                except KeyboardInterrupt:
+                    pass
+            self._shutdown()
+            return
+
         # Create UI (must be in main thread)
+        _import_ui()
         self.overlay = NotchiOverlay(
             self.session_store,
             on_quit=self._shutdown,
