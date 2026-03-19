@@ -8,3 +8,7 @@ build/
 .venv/
 venv/
 env/
+*.spec.bak
+Notchi.exe
+notchi_icon.ico
+*.manifest
