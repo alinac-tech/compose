@@ -43,14 +43,22 @@ python3 main.py "your_username" "your_password"
 5. ✅ VPN bağlantısı kurulur
 ```
 
-## Yapı
+## Dokümantasyon
 
 ```
-├── main.py              # Ana script
-├── config.example.py    # Konfigürasyon şablonu
-├── SETUP.md             # Detaylı kurulum rehberi
-├── requirements.txt     # Python kütüphaneleri
-└── README.md            # Bu dosya
+📚 Rehberler:
+├── README.md                      # Bu dosya (Genel)
+├── SETUP.md                       # Kurulum talimatları
+├── SECURITY.md                    # 🔐 Credentials güvenliği
+├── SHORTCUTS_SETUP.md             # 📱 iOS Shortcuts adım adım
+└── SHORTCUTS_EXAMPLES.md          # 📋 Hazır Shortcut örnekleri
+
+💻 Kod:
+├── main.py                        # Ana otomasyonu script
+├── keychain_manager.py            # macOS Keychain yönetim
+├── config.example.py              # Konfigürasyon şablonu
+├── .env.example                   # Environment variables şablonu
+└── requirements.txt               # Python kütüphaneleri
 ```
 
 ## Sistem Gereksinimleri
