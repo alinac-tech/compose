@@ -6,31 +6,37 @@ FortiClient VPN'e **otomatik olarak** giriş yapan akıllı bir sistem:
 - ✅ Token'ı otomatik olarak girer
 - ✅ VPN bağlantısını tamamlar
 
-## Hızlı Başlangıç
+## 🚀 Hızlı Başlangıç
 
-### 1. Kurulum
+### **En Hızlı: 5 Dakikada Başla!** ⚡
+👉 **[QUICK_SETUP.md](QUICK_SETUP.md)** ← Başla buradan!
+
+### Detaylı Kurulum
+
+**1. Python kütüphanelerini yükle:**
 ```bash
-# Kütüphaneleri yükle
 pip install -r requirements.txt
-
-# Config dosyasını oluştur
-cp config.example.py config.py
-# Sonra config.py'de credentials'ını güncelle
 ```
 
-### 2. İlk Kez Ayarla
-Detaylı kurulum için: [SETUP.md](SETUP.md)
+**2. Credentials'ı güvenli şekilde sakla:**
+```bash
+# Seçenek A: macOS Keychain (En güvenli)
+python3 keychain_manager.py save username password
 
-### 3. Çalıştır
+# Seçenek B: Environment variables
+cp .env.example .env
+nano .env  # Credentials'ını gir
 
-**Seçenek A: İnteraktif mod (Credential'ları sorgulanır)**
+# Seçenek C: Her seferinde sor
+# (Script'in bunu yapacak)
+```
+
+**3. iOS Shortcuts'ı iPhone'da kur:**
+- 📱 [QUICK_SETUP.md](QUICK_SETUP.md) → iCloud Link yöntemi
+
+**4. Python script'i çalıştır:**
 ```bash
 python3 main.py
-```
-
-**Seçenek B: Command-line argümanları ile**
-```bash
-python3 main.py "your_username" "your_password"
 ```
 
 ## Çalışma Akışı
