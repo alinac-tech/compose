@@ -13,6 +13,27 @@
 pip install -r requirements.txt
 ```
 
+### Credentials Saklama (ÖNEMLİ!) 🔐
+
+**Seçenek A: macOS Keychain (Önerilir)**
+```bash
+python3 keychain_manager.py save your_username your_password
+```
+
+**Seçenek B: Environment Variables**
+```bash
+cp .env.example .env
+# .env dosyasını düzenle ve credentials'ını gir
+nano .env
+```
+
+**Seçenek C: Her seferinde gir**
+```bash
+python3 main.py  # Username/password isteyecek
+```
+
+Detaylı güvenlik rehberi için: [SECURITY.md](SECURITY.md)
+
 ### Güvenlik İzinleri (Önemli!)
 FortiClient'ı kontrol etmek için macOS izni gerekli:
 1. **System Preferences → Security & Privacy → Accessibility**

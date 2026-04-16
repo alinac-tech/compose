@@ -1,13 +1,38 @@
+# Credentials - ASLA COMMIT ETME!
 config.py
 .env
+.env.local
+.env.*.local
+credentials.json
+
+# Logs
 *.log
+logs/
+
+# Python
 __pycache__/
 *.pyc
-.DS_Store
-.idea/
-.vscode/
+*.pyo
 *.egg-info/
 dist/
 build/
 venv/
 env/
+.Python
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Project specific
+*.bak
+temp/
+cache/

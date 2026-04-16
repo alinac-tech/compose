@@ -10,6 +10,18 @@ import subprocess
 import time
 import re
 from typing import Optional
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
+# Load .env file if it exists
+if load_dotenv:
+    env_file = Path(__file__).parent / ".env"
+    if env_file.exists():
+        load_dotenv(env_file)
 
 class FortiClientAutomation:
     """FortiClient VPN token otomasyonu"""
@@ -137,6 +149,56 @@ class FortiClientAutomation:
 
         return None
 
+def get_credentials_from_sources() -> tuple[Optional[str], Optional[str]]:
+    """Credentials'ı farklı kaynaklardan al (öncelik sırası)"""
+
+    username = None
+    password = None
+
+    # 1. Command-line arguments
+    if len(sys.argv) > 2:
+        return sys.argv[1], sys.argv[2]
+
+    # 2. Environment variables
+    username = os.getenv("VPN_USERNAME")
+    password = os.getenv("VPN_PASSWORD")
+
+    if username and password:
+        print("✓ Environment variables'dan credentials yüklendi")
+        return username, password
+
+    # 3. macOS Keychain
+    try:
+        from keychain_manager import KeychainManager
+
+        if KeychainManager.credentials_exist():
+            username, password = KeychainManager.get_credentials()
+            if username and password:
+                print("✓ Keychain'den credentials yüklendi")
+                return username, password
+    except ImportError:
+        pass
+
+    # 4. İnteraktif input
+    print("\n⚠️  Credentials bulunmadı. Lütfen girin:")
+    print("   (Secure storage için sonra 'python keychain_manager.py save <user> <pass>' çalıştır)\n")
+
+    username = input("Username: ").strip()
+    password = input("Password: ").strip()
+
+    # Keychain'e kaydetme teklifi
+    if username and password:
+        try:
+            from keychain_manager import KeychainManager
+            save_choice = input("\nKeychain'e kaydetmek ister misiniz? (y/n): ").strip().lower()
+            if save_choice == 'y':
+                KeychainManager.save_credentials(username, password)
+        except ImportError:
+            pass
+
+    return username, password
+
+
 def main():
     """Ana fonksiyon"""
     print("=" * 50)
@@ -144,13 +206,11 @@ def main():
     print("=" * 50)
 
     # Credentials'ı al
-    if len(sys.argv) > 2:
-        username = sys.argv[1]
-        password = sys.argv[2]
-    else:
-        print("\nCredentials'ı girin:")
-        username = input("Username: ").strip()
-        password = input("Password: ").strip()
+    username, password = get_credentials_from_sources()
+
+    if not username or not password:
+        print("❌ Credentials alınamadı")
+        sys.exit(1)
 
     automation = FortiClientAutomation(username=username, password=password)
 
