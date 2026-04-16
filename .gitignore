@@ -1,0 +1,13 @@
+config.py
+.env
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/
+venv/
+env/
